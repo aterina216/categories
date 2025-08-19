@@ -2,63 +2,51 @@
   "categories": [
     {
       "id": 1,
-      "name": "Kotlin Basics",
-      "description": "Основные концепции языка Kotlin",
-      "questions_count": 15
+      "name": "Основы Java",
     },
     {
       "id": 2,
-      "name": "Android Components",
-      "description": "Activity, Fragment, Service, BroadcastReceiver",
-      "questions_count": 20
+      "name": "Kotlin Basics"
     },
     {
       "id": 3,
-      "name": "UI Development",
-      "description": "View, ViewGroup, XML layouts, Custom Views",
-      "questions_count": 18
+      "name": "Основные компоненты андроид",
     },
     {
       "id": 4,
-      "name": "Networking",
-      "description": "Retrofit, OkHttp, REST API, JSON parsing",
-      "questions_count": 12
+      "name": "UI/UX",
     },
     {
       "id": 5,
-      "name": "Database",
-      "description": "Room, SQLite, DAO, Migrations",
-      "questions_count": 10
+      "name": "Архитектурные подходы и паттерны",
     },
     {
       "id": 6,
-      "name": "Multithreading",
-      "description": "Coroutines, RxJava, Executors, LiveData",
-      "questions_count": 14
+      "name": "Работа с данными (хранение и кэш)",
     },
     {
       "id": 7,
-      "name": "Architecture",
-      "description": "MVVM, MVP, Clean Architecture, ViewModel",
-      "questions_count": 16
+      "name": "Сетевое взаимодействие",
     },
     {
       "id": 8,
-      "name": "Dependency Injection",
-      "description": "Dagger, Hilt, Koin",
-      "questions_count": 9
+      "name": "Конкурентность и асинхронность",
     },
     {
       "id": 9,
-      "name": "Testing",
-      "description": "Unit tests, UI tests, Mockito, Espresso",
-      "questions_count": 11
+      "name": "Производительность, профилирование, оптимизация",
     },
     {
       "id": 10,
-      "name": "Performance",
-      "description": "Memory management, ANR, Battery optimization",
-      "questions_count": 8
+      "name": "Тестирование",
+    },
+    {
+      "id": 11,
+      "name": "Безопасность",
+    },
+     {
+      "id": 12,
+      "name": "Сборка, CI/CD, публикация",
     }
   ]
 }
