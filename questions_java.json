@@ -1,0 +1,22 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "categoryId": 1,
+      "description": "В чем разница между val и var?",
+      "answer": "val - неизменяемая ссылка (как final в Java), var - изменяемая."
+    },
+    {
+      "id": 2,
+      "categoryId": 1,
+      "description": "Что такое data class?",
+      "answer": "Класс, предназначенный для хранения данных..."
+    },
+    {
+      "id": 3,
+      "categoryId": 2,
+      "description": "Какой метод жизненного цикла вызывается перед отображением Activity?",
+      "answer": "onStart()"
+    }
+  ]
+}
