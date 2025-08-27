@@ -131,6 +131,6 @@
       "categoryId": 1,
       "description": "Как правильно логировать в Java‑приложениях?",
       "answer": "Иерархия исключений в Java — это древовидная структура классов исключений, где корневым классом является Throwable.\n\n📊 Основная структура:\n\n            Throwable (корневой класс)\n           /          \\\n         Error       Exception\n                     /        \\\n          Checked (напр., IOException)  RuntimeException (Unchecked)\n\n🔹 Throwable — базовый класс для всех исключений и ошибок\n• Содержит методы: getMessage(), printStackTrace(), getCause()\n\n🔹 Error — критические ошибки виртуальной машины (JVM):\n• OutOfMemoryError, StackOverflowError, VirtualMachineError\n• Не должны обрабатываться (unchecked)\n\n🔹 Exception — базовый класс для проверяемых исключений:\n• IOException, SQLException, ClassNotFoundException\n\n🔹 RuntimeException — непроверяемые исключения:\n• NullPointerException, IllegalArgumentException, ArrayIndexOutOfBoundsException\n\n📌 Ключевые характеристики:\n• Checked исключения: проверяются компилятором, должны обрабатываться\n• Unchecked исключения (Error + RuntimeException): не проверяются компилятором\n\n💡 Best Practices:\n• Error не следует перехватывать (кроме логирования)\n• Checked исключения — для восстановимых ошибок\n• Unchecked исключения — для ошибок программирования"
-    },
+    }
   ]
 }
