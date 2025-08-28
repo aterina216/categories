@@ -126,6 +126,132 @@
       "description": "Как правильно логировать в Java‑приложениях?",
       "answer": "Иерархия исключений в Java — это древовидная структура классов исключений, где корневым классом является Throwable.\n\n📊 Основная структура:\n\n            Throwable (корневой класс)\n           /          \\\n         Error       Exception\n                     /        \\\n          Checked (напр., IOException)  RuntimeException (Unchecked)\n\n🔹 Throwable — базовый класс для всех исключений и ошибок\n• Содержит методы: getMessage(), printStackTrace(), getCause()\n\n🔹 Error — критические ошибки виртуальной машины (JVM):\n• OutOfMemoryError, StackOverflowError, VirtualMachineError\n• Не должны обрабатываться (unchecked)\n\n🔹 Exception — базовый класс для проверяемых исключений:\n• IOException, SQLException, ClassNotFoundException\n\n🔹 RuntimeException — непроверяемые исключения:\n• NullPointerException, IllegalArgumentException, ArrayIndexOutOfBoundsException\n\n📌 Ключевые характеристики:\n• Checked исключения: проверяются компилятором, должны обрабатываться\n• Unchecked исключения (Error + RuntimeException): не проверяются компилятором\n\n💡 Best Practices:\n• Error не следует перехватывать (кроме логирования)\n• Checked исключения — для восстановимых ошибок\n• Unchecked исключения — для ошибок программирования"
     },
+  {
+    "id": 22,
+      "categoryId": 1,
+      "description": "Что такое @Override, @Deprecated, @SuppressWarnings?",
+      "answer": ""@Override - переопределение метода, @Deprecated - устаревший код, @SuppressWarnings - подавление предупреждений."
+    },
+    {
+      "id": 23,
+      "categoryId": 1,
+      "description": "Как создать аннотацию с RUNTIME-Retention?",
+      "answer": "@Retention(RetentionPolicy.RUNTIME) @interface MyAnnotation { }"
+    },
+    {
+      "id": 24,
+      "categoryId": 1,
+      "description": "Что такое Reflection и как её использовать?",
+      "answer": "Механизм исследования и модификации кода во время выполнения. Class.getMethods(), Field.get(), Method.invoke()."
+    },
+    {
+      "id": 25,
+      "categoryId": 1,
+      "description": "Какие проблемы могут возникнуть при использовании Reflection?",
+      "answer": "Производительность, безопасность, сложность отладки, проблемы с обновлениями Java."
+},
+    {
+      "id": 26,
+      "categoryId": 1,
+      "description": "Что такое Serializable и какие нюансы её использования?",
+      "answer": "Интерфейс-маркер для сериализации объектов. Нюансы: serialVersionUID, transient поля, кастомная сериализация."
+},
+    {
+      "id": 27,
+      "categoryId": 1,
+      "description": "Чем отличается Serializable от Externalizable?",
+      "answer": "Serializable - автоматическая сериализация, Externalizable - ручное управление через writeExternal/readExternal."
+},
+    {
+      "id": 28,
+      "categoryId": 1,
+      "description": "Что такое JVM и основные её компоненты?",
+      "answer": "Виртуальная машина Java: ClassLoader, Runtime Data Areas, Execution Engine, JIT compiler, Garbage Collector."
+},
+    {
+      "id": 29,
+      "categoryId": 1,
+      "description": "Как работает ClassLoader?",
+      "answer": "Загружает классы в память. Иерархия: Bootstrap → Platform → System class loaders. Delegation model."
+},
+     {
+      "id": 30,
+      "categoryId": 1,
+      "description": "Что такое Heap vs Stack в Java?",
+      "answer": "Heap - хранение объектов, Stack - вызовы методов и локальные переменные. Heap управляется GC."
+},
+    {
+      "id": 31,
+      "categoryId": 1,
+      "description": "Как работает Garbage Collector? Основные алгоритмы?",
+      "answer": "Удаляет неиспользуемые объекты. Алгоритмы: Mark-Sweep, Copying, Mark-Compact, Generational collection."
+},
+    {
+      "id": 32,
+      "categoryId": 1,
+      "description": "Что такое Minor GC и Full GC?",
+      "answer": "Minor GC - очистка Young generation, быстрая. Full GC - очистка всей heap, медленная."
+},
+     {
+      "id": 33,
+      "categoryId": 1,
+      "description": "Что такое JIT (Just-In-Time compiler) и как он улучшает производительность?",
+      "answer": "Компилирует байткод в нативный код во время выполнения. Улучшает производительность горячего кода."
+     },
+    {
+      "id": 34,
+      "categoryId": 1,
+      "description": "Что такое Escape Analysis и какие её результаты?",
+      "answer": "Анализ escape-объектов. Результаты: stack allocation, scalar replacement, lock elision."
+    },
+    {
+      "id": 35,
+      "categoryId": 1,
+      "description": "Что такое Class Data Sharing (CDS)?",
+      "answer": "Кэширование метаданных классов между JVM для ускорения запуска и уменьшения памяти."
+    },
+    {
+      "id": 36,
+      "categoryId": 1,
+      "description": "Как измерять производительность Java-кода?",
+      "answer": "Профилировщики: JProfiler, VisualVM, Async-Profiler. JMH для микро-бенчмарков."
+    },
+    {
+      "id": 37,
+      "categoryId": 1,
+      "description": "Какие паттерны проектирования часто используют в Java-/Android-разработке?",
+      "answer": "Singleton, Builder, Factory, Observer, Adapter, MVVM, Repository, Dependency Injection."
+    },
+    {
+      "id": 38,
+      "categoryId": 1,
+      "description": "Как реализовать Thread-Safe Singleton?",
+      "answer": "Double-checked locking, Enum singleton, Holder pattern, synchronized methods."
+    },
+    {
+      "id": 39,
+      "categoryId": 1,
+      "description": "Что такое volatile и когда его использовать?",
+      "answer": "Гарантирует видимость изменений между потоками. Использовать для флагов и простых атомарных операций."
+    },
+    {
+      "id": 40,
+      "categoryId": 1,
+      "description": "Чем отличаются synchronized методы и synchronized блоки?",
+      "answer": "synchronized методы блокируют весь объект, блоки - только указанный участок кода."
+    },
+    {
+      "id": 41,
+      "categoryId": 1,
+      "description": "Что такое ReentrantLock, какие у него преимущества?",
+      "answer": "Гибкая альтернатива synchronized. Преимущества: tryLock(), fair locking, multiple condition variables."
+    },
+    {
+      "id": 42,
+      "categoryId": 1,
+      "description": "Что такое CopyOnWriteArrayList и в каких случаях её использовать?",
+      "answer": "Потокобезопасный список с копированием при изменении. Для частого чтения и редкой записи."
+    },
     {
       "id": 22,
       "categoryId": 1,
