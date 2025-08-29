@@ -130,7 +130,7 @@
     "id": 22,
       "categoryId": 1,
       "description": "Что такое @Override, @Deprecated, @SuppressWarnings?",
-      "answer": ""@Override - переопределение метода, @Deprecated - устаревший код, @SuppressWarnings - подавление предупреждений."
+      "answer": "@Override - переопределение метода, @Deprecated - устаревший код, @SuppressWarnings - подавление предупреждений."
     },
     {
       "id": 23,
