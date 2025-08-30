@@ -261,7 +261,7 @@
     {
       "id": 44,
       "categoryId": 1,
-      "description": "Что такое Future и CompletableFuture?,
+      "description": "Что такое Future и CompletableFuture?",
       "answer": "Future представляет результат асинхронной операции (блокирующий get()). CompletableFuture - улучшенная версия с non-blocking chaining, комбинированием результатов, exception handling. Поддерживает callback'и (thenApply, thenAccept) и комбинацию нескольких future (allOf, anyOf)."
     },
     {
