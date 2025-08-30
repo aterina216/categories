@@ -322,187 +322,505 @@
       "id": 54,
       "categoryId": 1,
       "description": "Что такое module system (JPMS) в Java 9+?",
-      "answer": "📌 Основные различия в структуре данных и производительности:\n\n• ArrayList — реализация на основе динамического массива\n• LinkedList — реализация на основе двусвязного списка\n\n⚡ Производительность операций:\n\n| Операция          | ArrayList       | LinkedList      |\n|-------------------|-----------------|-----------------|\n| get(index)        | O(1)            | O(n)            |\n| add(element)      | O(1) amortized  | O(1)            |\n| add(index, element)| O(n)           | O(1) (если есть итератор)|\n| remove(index)     | O(n)            | O(1) (если есть итератор)|\n| remove(element)   | O(n)            | O(n)            |\n\n🔹 Когда использовать ArrayList:\n• Частый доступ по индексу (чтение)\n• Меньший расход памяти (только данные + запас)\n• Добавление только в конец списка\n\n🔹 Когда использовать LinkedList:\n• Частые вставки/удаления в начале/середине списка\n• Реализация стеков/очередей (реализует Deque)\n• Когда количество операций вставки/удаления преобладает над чтением\n\n💡 Особенности:\n• ArrayList требует копирования массива при превышении capacity\n• LinkedList требует больше памяти (хранение ссылок next/prev)\n• Для итерации по всем элементам разница незначительна"
-},
-    {
+      "answer": "JPMS (Java Platform Module System) - модульная системы. Позволяет: explicit dependencies (requires), encapsulation (exports), улучшенная безопасность, оптимизация размера приложения. module-info.java описывает зависимости и экспорты модуля."
+     },
+   {
       "id": 55,
       "categoryId": 1,
-      "description": "Когда использовать HashMap, TreeMap, LinkedHashMap?",
-      "answer": "Выбор реализации Map зависит от требований к порядку элементов и производительности:\n\nHashMap - используйте по умолчанию, когда:\n• Не важен порядок элементов\n• Нужна максимальная производительность (O(1) для основных операций)\n• Подходит для кэширования, индексации данных\n\nLinkedHashMap - используйте когда:\n• Нужно сохранить порядок добавления элементов\n• Требуется предсказуемая последовательность при итерации\n• Реализация LRU-кэша (с accessOrder=true)\n\nTreeMap - используйте когда:\n• Нужен сортированный порядок по ключам\n• Требуется работа с диапазонами ключей (subMap, headMap, tailMap)\n• Ключи должны быть отсортированы согласно их естественному порядку или Comparator\n\nСравнение производительности:\n• HashMap: O(1) для put/get при хорошей хэш-функции\n• LinkedHashMap: немного медленнее HashMap из-за поддержания порядка\n• TreeMap: O(log n) для всех операций из-за красно-черного дерева\n\nПамять:\n• HashMap: меньше памяти\n• LinkedHashMap: дополнительная память для поддержания порядка\n• TreeMap: больше памяти из-за хранения дерева"
-},
+      "description": "Как правильно обрабатывать InterruptedException?",
+      "answer": "При перехвате InterruptedException нужно: либо пробросить исключение дальше, либо восстановить interrupted status через Thread.currentThread().interrupt(). Нельзя игнорировать исключение, это нарушает механизм прерывания потоков."
+    },
     {
       "id": 56,
       "categoryId": 1,
-      "description": "Что такое fail‑fast и fail‑safe итераторы?",
-      "answer": "📌 Fail-Fast итераторы:\n• Немедленно выбрасывают ConcurrentModificationException при обнаружении изменений коллекции во время итерации\n• Работают через счётчик modCount, который проверяет изменения\n• Используются в несинхронизированных коллекциях: ArrayList, HashMap, HashSet\n• Не гарантируют поведение при модификации\n\n📌 Fail-Safe итераторы:\n• Работают с клоном коллекции или используют механизм версий\n• Не выбрасывают исключения при изменении исходной коллекции\n• Используются в thread-safe коллекциях: ConcurrentHashMap, CopyOnWriteArrayList\n• Могут не отражать актуальное состояние коллекции\n\n💡 Сравнение:\n| Характеристика      | Fail-Fast          | Fail-Safe          |\n|---------------------|--------------------|--------------------|\n| Исключения          | Да (CME)           | Нет                |\n| Актуальность данных | Да                 | Нет (работа с клоном) |\n| Производительность  | Выше               | Ниже (копирование) |\n| Потокобезопасность  | Нет                | Да                 |\n\n⚠️ Пример Fail-Fast:\nList<String> list = new ArrayList<>();\nIterator<String> it = list.iterator();\nlist.add(\"element\"); // ConcurrentModificationException!\nit.next();"
-},
+      "description": "Что такое Class объект и как получить его?",
+      "answer": "Class объект содержит метаданные класса. Получить можно: через ClassName.class, object.getClass(), Class.forName('полное.имя.класса'). Используется для рефлексии, создания экземпляров, получения информации о методах и полях."
+    },
     {
       "id": 57,
       "categoryId": 1,
-      "description": "Как работают ConcurrentHashMap и другие конкурентные коллекции?",
-      "answer": "ConcurrentHashMap — потокобезопасная реализация Map, использующая сегментирование (bucket locking) вместо полной синхронизации.\n\n🔹 Принципы работы ConcurrentHashMap:\n• Разделение данных на сегменты (16 по умолчанию)\n• Блокировка на уровне сегмента, а не всей таблицы\n• Неблокирующие операции чтения\n• Поддержка атомарных операций (putIfAbsent, compute)\n\n🔹 Сравнение с другими коллекциями:\n| Коллекция              | Потокобезопасность | Механизм блокировки     |\n|------------------------|-------------------|-------------------------|\n| ConcurrentHashMap      | Да                | Сегменты (lock striping)|\n| Collections.synchronizedMap | Да          | Полная синхронизация    |\n| Hashtable              | Да                | Полная синхронизация    |\n| HashMap                | Нет               | -                       |\n\n🔹 Другие конкурентные коллекции:\n• CopyOnWriteArrayList — чтение без блокировок, копирование при записи\n• ConcurrentLinkedQueue — неблокирующая очередь на CAS-операциях\n• BlockingQueue (Array/LinkedBlockingQueue) — блокирующие очереди\n\n🔹 Ключевые методы ConcurrentHashMap:\n• putIfAbsent() — атомарная вставка при отсутствии\n• compute() — атомарное вычисление значения\n• getOrDefault() — безопасное получение с значением по умолчанию\n\n💡 Преимущества ConcurrentHashMap:\n• Высокая производительность при конкурентном доступе\n• Чтение не требует блокировок\n• Итераторы не выбрасывают ConcurrentModificationException"
-},
+      "description": "Что такое Object.clone(), Cloneable?",
+      "answer": "Object.clone() создает поверхностную копию объекта. Cloneable - маркерный интерфейс, разрешающий клонирование. Для глубокого клонирования нужно переопределять clone() и клонировать вложенные объекты. Лучше использовать copy constructors или сериализацию."
+    },
     {
       "id": 58,
       "categoryId": 1,
-      "description": "Что такое AutoBoxing и Unboxing?",
-      "answer": "AutoBoxing и Unboxing — это автоматическое преобразование между примитивными типами и их соответствующими классами-обёртками (Wrapper Classes) в Java.\n\n📦 AutoBoxing — автоматическая упаковка примитива в объект:\n• int → Integer\n• long → Long\n• double → Double\n• boolean → Boolean\n\n🔓 Unboxing — автоматическая распаковка объекта в примитив:\n• Integer → int\n• Long → long\n• Double → double\n• Boolean → boolean\n\n📌 Примеры:\n// Autoboxing\nInteger num = 10;    // вместо Integer.valueOf(10)\nDouble price = 19.99; // вместо Double.valueOf(19.99)\n\n// Unboxing  \nint n = num;         // вместо num.intValue()\ndouble p = price;    // вместо price.doubleValue()\n\n⚡ Особенности и подводные камни:\n• Производительность: каждое преобразование создает объект\n• Кэширование: значения от -128 до 127 кэшируются для Integer\n• NPE риск: unboxing null-объекта вызывает NullPointerException\n\nInteger a = null;\nint b = a; // NPE!\n\n• Сравнение: == для объектов сравнивает ссылки, а не значения\n\nInteger x = 127;\nInteger y = 127;\nx == y; // true (кэширование)\n\nInteger x = 128;\nInteger y = 128; \nx == y; // false (разные объекты)"
-},
+      "description": "Что такое Builder pattern, пример в Java?",
+      "answer": "Builder pattern - постепенное конструирование сложных объектов. Пример: StringBuilder, Lombok @Builder. Позволяет создавать объекты с множеством опциональных параметров без telescoping constructors. Улучшает читаемость и поддерживаемость кода."
+    },
     {
       "id": 59,
       "categoryId": 1,
-      "description": "Что такое boxing и unboxing в контексте Collections?",
-      "answer": "В контексте Collections boxing и unboxing — это автоматические преобразования между примитивными типами и их классами-обёртками, которые критически важны для работы с коллекциями, так как они могут хранить только объекты, а не примитивы.\n\n📦 Boxing (упаковка):\n• Автоматическое преобразование примитива → объект-обёртка\n• Происходит при добавлении примитива в коллекцию\n• Пример: list.add(42) → list.add(Integer.valueOf(42))\n\n🔓 Unboxing (распаковка):\n• Автоматическое преобразование объекта-обёртки → примитив\n• Происходит при извлечении значений из коллекции\n• Пример: int num = list.get(0) → int num = list.get(0).intValue()\n\n⚠️ Особенности в коллекциях:\n• Производительность: Каждая операция boxing/unboxing создает объект\n• Память: Коллекции примитивов расходуют больше памяти из-за обёрток\n• NPE Risk: Unboxing null-значения вызывает NullPointerException\n\n💡 Решения для оптимизации:\n• Специализированные библиотеки (Eclipse Collections, Koloboke)\n• Использование массивов примитивов для больших данных\n• Stream API с примитивными специализациями (IntStream, LongStream)\n\nПример проблемного кода:\nList<Integer> list = new ArrayList<>();\nfor (int i = 0; i < 1000000; i++) {\n    list.add(i); // Boxing происходит на каждой итерации\n}\n\nint sum = 0;\nfor (Integer num : list) {\n    sum += num; // Unboxing происходит на каждой итерации\n}"
+      "description": "Как реализовать deep copy?",
+      "answer": "Глубокое копирование можно реализовать через: сериализацию/десериализацию, ручное копирование всех вложенных объектов, использование библиотек (Apache Commons Lang SerializationUtils, Jackson ObjectMapper). Требует чтобы все вложенные объекты были Serializable."
     },
     {
       "id": 60,
       "categoryId": 1,
-      "description": "Объясните try‑with‑resources.",
-      "answer": "Try-with-resources — это современный способ работы с ресурсами в Java, который автоматически закрывает ресурсы после использования. Ресурсом считается любой объект, который реализует интерфейс AutoCloseable.\n\nОсновные преимущества:\n• Автоматическое закрытие ресурсов\n• Упрощение кода по сравнению с try-finally\n• Гарантированное освобождение ресурсов даже при исключениях\n\nСинтаксис:\ntry (FileInputStream fis = new FileInputStream(\"file.txt\")) {\n    // работа с ресурсом\n} // ресурс автоматически закроется здесь\n\nОсобенности:\n• Можно объявлять несколько ресурсов через точку с запятой\n• Ресурсы закрываются в порядке, обратном их созданию\n• Исключения при закрытии добавляются как подавленные (suppressed)\n\nПример с несколькими ресурсами:\ntry (\n    Connection conn = dataSource.getConnection();\n    PreparedStatement stmt = conn.prepareStatement(sql)\n) {\n    // выполнение запроса\n}"
+      "description": "Что такое StringPool?",
+      "answer": "StringPool - пул строк в heap памяти. Хранит уникальные строковые литералы для экономии памяти. Строки создаются через литералы попадают в пул, через new String() - нет. Метод intern() добавляет строку в пул или возвращает существующую."
     },
     {
       "id": 61,
       "categoryId": 1,
-      "description": "Чем отличаются checked и unchecked исключения?",
-      "answer": "В Java исключения делятся на два основных типа:\n\n✅ Checked (проверяемые) исключения:\n• Проверяются на этапе компиляции\n• Должны быть обработаны (try-catch) или объявлены в сигнатуре метода (throws)\n• Наследуются от Exception (но не от RuntimeException)\n• Примеры: IOException, SQLException, ClassNotFoundException\n\n❌ Unchecked (непроверяемые) исключения:\n• Не проверяются на этапе компиляции\n• Обработка не обязательна\n• Наследуются от RuntimeException\n• Примеры: NullPointerException, ArrayIndexOutOfBoundsException, IllegalArgumentException\n\n📊 Ключевые различия:\n| Критерий          | Checked               | Unchecked             |\n|-------------------|-----------------------|-----------------------|\n| Проверка          | Компилятором          | Нет проверки          |\n| Обработка         | Обязательна           | Не обязательна        |\n| Наследование      | от Exception          | от RuntimeException   |\n| Типичные случаи   | Внешние ошибки        | Ошибки программирования |\n\n💡 Рекомендации:\n• Checked: для восстановимых ошибок (файл не найден, сетевые проблемы)\n• Unchecked: для ошибок программирования (неверные аргументы, нулевые ссылки)\n• Современные best practices: предпочтение unchecked исключениям"
+      "description": "Что делает StringBuilder vs StringBuffer?",
+      "answer": "StringBuilder - несинхронизированный, быстрее, для однопоточного использования. StringBuffer - синхронизированный, потокобезопасный, медленнее. Оба используются для эффективной конкатенации строк, избегая создания множества объектов String."
     },
     {
       "id": 62,
       "categoryId": 1,
-      "description": "Что такое Exception hierarchy? Какой корневой класс?",
-      "answer": "Иерархия исключений в Java — это древовидная структура классов исключений, где корневым классом является Throwable.\n\n📊 Основная структура:\n\n            Throwable (корневой класс)\n           /          \\\n         Error       Exception\n                     /        \\\n          Checked (напр., IOException)  RuntimeException (Unchecked)\n\n🔹 Throwable — базовый класс для всех исключений и ошибок\n• Содержит методы: getMessage(), printStackTrace(), getCause()\n\n🔹 Error — критические ошибки виртуальной машины (JVM):\n• OutOfMemoryError, StackOverflowError, VirtualMachineError\n• Не должны обрабатываться (unchecked)\n\n🔹 Exception — базовый класс для проверяемых исключений:\n• IOException, SQLException, ClassNotFoundException\n\n🔹 RuntimeException — непроверяемые исключения:\n• NullPointerException, IllegalArgumentException, ArrayIndexOutOfBoundsException\n\n📌 Ключевые характеристики:\n• Checked исключения: проверяются компилятором, должны обрабатываться\n• Unchecked исключения (Error + RuntimeException): не проверяются компилятором\n\n💡 Best Practices:\n• Error не следует перехватывать (кроме логирования)\n• Checked исключения — для восстановимых ошибок\n• Unchecked исключения — для ошибок программирования"
+      "description": "Как работает java.time API (JSR-310) и чем он лучше java.util.Date?",
+      "answer": "java.time API предоставляет неизменяемые и потокобезопасные классы: LocalDate, LocalDateTime, ZonedDateTime, Period, Duration. Лучше Date потому что: понятные API, поддержка временных зон, неизменяемость, лучшее представление временных промежутков."
     },
     {
       "id": 63,
       "categoryId": 1,
-      "description": "Как правильно логировать в Java‑приложениях?",
-      "answer": "Иерархия исключений в Java — это древовидная структура классов исключений, где корневым классом является Throwable.\n\n📊 Основная структура:\n\n            Throwable (корневой класс)\n           /          \\\n         Error       Exception\n                     /        \\\n          Checked (напр., IOException)  RuntimeException (Unchecked)\n\n🔹 Throwable — базовый класс для всех исключений и ошибок\n• Содержит методы: getMessage(), printStackTrace(), getCause()\n\n🔹 Error — критические ошибки виртуальной машины (JVM):\n• OutOfMemoryError, StackOverflowError, VirtualMachineError\n• Не должны обрабатываться (unchecked)\n\n🔹 Exception — базовый класс для проверяемых исключений:\n• IOException, SQLException, ClassNotFoundException\n\n🔹 RuntimeException — непроверяемые исключения:\n• NullPointerException, IllegalArgumentException, ArrayIndexOutOfBoundsException\n\n📌 Ключевые характеристики:\n• Checked исключения: проверяются компилятором, должны обрабатываться\n• Unchecked исключения (Error + RuntimeException): не проверяются компилятором\n\n💡 Best Practices:\n• Error не следует перехватывать (кроме логирования)\n• Checked исключения — для восстановимых ошибок\n• Unchecked исключения — для ошибок программирования"
+      "description": "Что такое Optional и как его использовать безопасно?",
+      "answer": "Optional - контейнер для значения, которое может быть null. Безопасное использование: orElse(), orElseGet(), orElseThrow(), ifPresent(), map(). Не следует использовать для полей классов, параметров методов или в коллекциях."
     },
-  {
-    "id": 64,
+    {
+      "id": 64,
       "categoryId": 1,
-      "description": "Что такое @Override, @Deprecated, @SuppressWarnings?",
-      "answer": "@Override указывает, что метод переопределяет метод родительского класса (проверка компилятором). @Deprecated помечает устаревший код, который не рекомендуется использовать. @SuppressWarnings подавляет предупреждения компилятора для конкретного элемента (например, unchecked для generics)."
+      "description": "Как тестировать Java-код? Какие библиотеки использовать?",
+      "answer": "JUnit 5 для unit-тестов, Mockito для мокинг, AssertJ для assertions, Testcontainers для интеграционных тестов с БД, Spring Test для Spring приложений. Важно покрывать тестами критичный код и использовать TDD где это уместно."
     },
     {
       "id": 65,
       "categoryId": 1,
-      "description": "Как создать аннотацию с RUNTIME-Retention?",
-      "answer": "Для создания аннотации с сохранением во время выполнения используется @Retention(RetentionPolicy.RUNTIME). Аннотация должна быть объявлена как @interface, может содержать элементы с значениями по умолчанию и должна быть помечена @Target для указания допустимых целей применения."
+      "description": "Как мокировать статические методы?",
+      "answer": "Mockito 3.4+ поддерживает мокирование статических методов через mockStatic(), PowerMock также предоставляет такую возможность. Однако лучше избегать статических методов в тестируемом коде, так как это усложняет тестирование."
     },
     {
       "id": 66,
       "categoryId": 1,
-      "description": "Что такое Reflection и как её использовать?",
-      "answer": "Reflection - механизм исследования и модификации структуры классов, методов, полей во время выполнения. Используется через класс Class: получение методов (getMethods()), полей (getFields()), вызов методов (invoke()), создание экземпляров (newInstance()). Полезно для фреймворков, но снижает производительность."
+      "description": "Что такое DI (Dependency Injection) в Java?",
+      "answer": "Dependency Injection - внедрение зависимостей вместо их создания внутри класса. Фреймворки: Spring, Guice, Dagger. Преимущества: упрощение тестирования, уменьшение связанности, централизованное управление зависимостями."
     },
     {
       "id": 67,
       "categoryId": 1,
-      "description": "Какие проблемы могут возникнуть при использовании Reflection?",
-      "answer": "Основные проблемы Reflection: снижение производительности (в 10-100 раз медленнее), проблемы безопасности (обходит access modifiers), сложность отладки, ограничения модульной системы Java 9+, проблемы с обновлениями (код может сломаться при изменении внутренней реализации классов)."
-},
+      "description": "Какие модификаторы доступны в интерфейсах Java 8+?",
+      "answer": "В интерфейсах доступны: public методы (по умолчанию), private методы (Java 9+), static методы, default методы. Также можно объявлять константы (public static final) и вложенные типы."
+    },
     {
       "id": 68,
       "categoryId": 1,
-      "description": "Что такое Serializable и какие нюансы её использования?",
-      "answer": "Serializable - маркерный интерфейс для сериализации объектов в байтовый поток. Нюансы: необходимость serialVersionUID для контроля версий, transient для исключения полей из сериализации, кастомная сериализация через writeObject/readObject, производительность и безопасность."
-},
+      "description": "Что такое functional interface? Как её объявить?",
+      "answer": "Functional interface - интерфейс с одним абстрактным методом. Объявляется с @FunctionalInterface аннотацией. Примеры: Runnable, Comparator, Function. Может иметь default и static методы. Используется для лямбда-выражений."
+    },
     {
       "id": 69,
       "categoryId": 1,
-      "description": "Чем отличается Serializable от Externalizable?",
-      "answer": "Serializable использует автоматическую сериализацию (рефлексию), Externalizable требует ручной реализации методов writeExternal/readExternal. Externalizable дает больше контроля над процессом, но требует больше кода. Serializable проще в использовании, но менее гибкая."
-},
+      "description": "Как использовать lambda в Java? Пример: list.stream().filter(s -> s.startsWith(\"A\")).collect(Collectors.toList());",
+      "answer": "Лямбда-выражения: (parameters) -> expression. Используются с functional interfaces. В примере: filter принимает Predicate, s -> s.startsWith(\"A\") - лямбда, проверяющая начало строки. Коллектор toList() собирает результат в список."
+    },
     {
       "id": 70,
       "categoryId": 1,
-      "description": "Что такое JVM и основные её компоненты?",
-      "answer": "JVM (Java Virtual Machine) - виртуальная машина для выполнения байт-кода. Основные компоненты: ClassLoader (загрузка классов), Runtime Data Areas (память: heap, stack, method area), Execution Engine (интерпретатор и JIT-компилятор), Garbage Collector (управление памятью), JNI (нативные вызовы)."
-},
+      "description": "Что такое Method Reference и синтаксис?",
+      "answer": "Method Reference - ссылка на метод. Синтаксис: Class::method (статический), object::method (экземпляр), Class::new (конструктор). Пример: System.out::println, String::length. Более читаемая альтернатива лямбдам."
+    },
     {
       "id": 71,
       "categoryId": 1,
-      "description": "Как работает ClassLoader?",
-      "answer": "ClassLoader загружает классы в память JVM. Иерархия: Bootstrap (загрузка core Java классов), Platform (загрузка platform классов), System (загрузка application классов). Использует delegation model - сначала делегирует загрузку родительскому ClassLoader'у, затем пытается загрузить сам."
-},
-     {
+      "description": "Что такое Stream API, основные категории операций?",
+      "answer": "Stream API - абстракция для обработки последовательностей данных. Основные операции: intermediate (filter, map, sorted - ленивые, возвращают Stream) и terminal (collect, forEach, reduce - eager, запускают обработку). Поддерживает параллельное выполнение."
+    },
+    {
       "id": 72,
       "categoryId": 1,
-      "description": "Что такое Heap vs Stack в Java?",
-      "answer": "Heap - область памяти для хранения объектов (управляется GC). Stack - область для вызовов методов и хранения локальных переменных и ссылок (управляется автоматически). Каждый поток имеет свой stack, heap общий для всех потоков."
-},
+      "description": "Как параллелить поток операций?",
+      "answer": "Через parallelStream() или stream().parallel(). Эффективно для CPU-intensive задач с большими данными. Не подходит для I/O операций или при наличии shared mutable state. Важно учитывать накладные расходы на создание ForkJoinPool."
+    },
     {
       "id": 73,
       "categoryId": 1,
-      "description": "Как работает Garbage Collector? Основные алгоритмы?",
-      "answer": "Garbage Collector автоматически освобождает память от неиспользуемых объектов. Основные алгоритмы: Mark-Sweep (пометить используемые объекты, удалить непомеченные), Copying (копирование живых объектов в новую область), Mark-Compact (пометить и уплотнить оставшиеся объекты), Generational collection (разделение heap на поколения для оптимизации)."
-},
+      "description": "Что такое Collector, пример toList()?",
+      "answer": "Collector - интерфейс для сбора элементов потока в коллекцию или результат. toList() - коллектор, собирающий элементы в List. Другие примеры: toSet(), toMap(), groupingBy(), joining(). Можно создавать кастомные коллекторы."
+    },
     {
       "id": 74,
       "categoryId": 1,
-      "description": "Что такое Minor GC и Full GC?",
-      "answer": "Minor GC - сборка мусора в Young Generation (быстрая, происходит часто). Full GC - полная сборка мусора во всех поколениях (медленная, старается избегать). Full GC вызывается когда недостаточно памяти после Minor GC или при явном вызове System.gc()."
-},
-     {
+      "description": "Как обрабатывать исключения в Stream?",
+      "answer": "Через try-catch внутри лямбда-выражений, обертывание в unchecked исключения, использование Optional для null-safe операций. Можно создать вспомогательные методы-обертки для обработки checked исключений."
+    },
+    {
       "id": 75,
       "categoryId": 1,
-      "description": "Что такое JIT (Just-In-Time compiler) и как он улучшает производительность?",
-      "answer": "JIT-компилятор преобразует часто выполняемый байт-код в нативный машинный код во время выполнения. Улучшает производительность за счет: оптимизации кода под конкретную платформу, кэширования скомпилированного кода, применения агрессивных оптимизаций (inlining, loop unrolling)."
-     },
+      "description": "Что такое CompletableFuture.supplyAsync и как задать Executor?",
+      "answer": "supplyAsync(Supplier) выполняет Supplier асинхронно в ForkJoinPool.commonPool(). supplyAsync(Supplier, Executor) позволяет указать кастомный Executor. Возвращает CompletableFuture с результатом выполнения."
+    },
     {
       "id": 76,
       "categoryId": 1,
-      "description": "Что такое Escape Analysis и какие её результаты?",
-      "answer": "Escape Analysis - анализ возможности выхода объекта за пределы текущего scope. Результаты: stack allocation (размещение объекта на стеке вместо кучи), scalar replacement (замена объекта его полями), lock elision (удаление ненужных синхронизаций)."
+      "description": "Что делает @JsonProperty, @SerializedName?",
+      "answer": "@JsonProperty (Jackson) и @SerializedName (Gson) - аннотации для маппинга полей при JSON сериализации/десериализации. Позволяют указать имя поля в JSON отличное от имени поля в Java классе."
     },
     {
       "id": 77,
       "categoryId": 1,
-      "description": "Что такое Class Data Sharing (CDS)?",
-      "answer": "CDS - механизм кэширования метаданных классов между запусками JVM. Ускоряет старт приложения за счет повторного использования уже загруженных классов. Особенно эффективен для серверных приложений с множеством инстансов JVM."
+      "description": "Как реализовать equals, hashCode безопасно?",
+      "answer": "Использовать Objects.equals() для сравнения и Objects.hash() для вычисления хэша. Включать все значимые поля. Гарантировать консистентность: если equals() возвращает true, hashCode() должен быть одинаковым."
     },
     {
       "id": 78,
       "categoryId": 1,
-      "description": "Как измерять производительность Java-кода?",
-      "answer": "Для измерения производительности используют: JMH для микро-бенчмарков, профилировщики (Async-Profiler, JProfiler, VisualVM), мониторинг GC, метрики JVM через JMX. Важно измерять в production-подобных условиях и учитывать warm-up JIT."
+      "description": "Что такое unchecked cast и как его избежать?",
+      "answer": "Unchecked cast - приведение типа без проверки во время компиляции. Избегать через: использование generics, проверку instanceof, проектирование без need casts. Если不可避免, нужно добавить @SuppressWarnings('unchecked')."
     },
     {
       "id": 79,
       "categoryId": 1,
-      "description": "Какие паттерны проектирования часто используют в Java-/Android-разработке?",
-      "answer": "Часто используемые паттерны: Singleton (единственный экземпляр), Builder (построение сложных объектов), Observer (событийная модель), Factory (создание объектов), Repository (доступ к данным), Dependency Injection (внедрение зависимостей), MVVM (Model-View-ViewModel в Android)."
+      "description": "Какие рекомендации по написанию чистого кода в Java?",
+      "answer": "Следовать принципам SOLID, использовать meaningful names, избегать магических чисел, писать unit tests, использовать статический анализ (Checkstyle, PMD, SpotBugs), соблюдать code style conventions, избегать глубокой вложенности."
     },
     {
       "id": 80,
       "categoryId": 1,
-      "description": "Как реализовать Thread-Safe Singleton?",
-      "answer": "Thread-Safe Singleton можно реализовать через: double-checked locking с volatile, static holder pattern (Bill Pugh), enum singleton (наиболее надежный), synchronized method. Enum подход рекомендуется Joshua Bloch как самый безопасный и простой."
+      "description": "Что такое корутины?",
+      "answer": "Корутины - легковесные потоки для асинхронного программирования. В Kotlin реализованы через suspend функции и CoroutineScope. Эффективнее потоков для I/O bound операций благодаря малому overhead и structured concurrency."
     },
     {
       "id": 81,
       "categoryId": 1,
-      "description": "Что такое volatile и когда его использовать?",
-      "answer": "volatile гарантирует видимость изменений переменной между потоками и предотвращает reordering. Используется для: флагов завершения, простых атомарных операций, однократной инициализации (double-checked locking). Не подходит для составных операций (инкремент).
+      "description": "Чем отличается suspend функция от обычной?",
+      "answer": "Suspend функции могут приостанавливать выполнение без блокировки потока и возобновлять его позже. Они могут быть вызваны только из других suspend функций или корутин. Обычные функции блокируют поток и не поддерживают приостановку."
     },
     {
       "id": 82,
       "categoryId": 1,
-      "description": "Чем отличаются synchronized методы и synchronized блоки?",
-      "answer": "synchronized методы блокируют весь объект (this), synchronized блоки позволяют выбрать объект-монитор. Блоки более гибкие: меньшая гранулярность блокировок, возможность использования внешних мониторов, лучше производительность."
+      "description": "Что такое Flow в Kotlin?",
+      "answer": "Flow - асинхронный поток данных, который может emit несколько значений последовательно. Это cold stream (начинает emitting при наличии collector'а). Поддерживает операторы map, filter, transform и интеграцию с корутинами."
     },
     {
       "id": 83,
       "categoryId": 1,
-      "description": "Что такое ReentrantLock, какие у него преимущества?",
-      "answer": "ReentrantLock - реализация интерфейса Lock с повторным входом. Преимущества: tryLock() с таймаутом, fair locking (честная блокировка), multiple condition variables, возможность прерываемого ожидания. Более гибкий чем synchronized, но требует ручного управления блокировками."
+      "description": "Чем отличается Launch от Async в корутинах?",
+      "answer": "Launch запускает корутину которая не возвращает результат (возвращает Job). Async запускает корутину которая возвращает результат (возвращает Deferred<T>). Async требует await() для получения результата, может бросать исключения."
     },
     {
       "id": 84,
       "categoryId": 1,
-      "description": "Что такое CopyOnWriteArrayList и в каких случаях её использовать?",
-      "answer": "CopyOnWriteArrayList - потокобезопасный список, который создает новую копию массива при каждой модификации. Используется при частом чтении и редкой записи. Подходит для listener lists, кэшей конфигураций. Не подходит для частых модификаций из-за накладных расходов на копирование."
+      "description": "Что такое Channel в Kotlin?",
+      "answer": "Channel - горячий поток данных для коммуникации между корутинами. Поддерживает различные capacity strategies (RENDEZVOUS, BUFFERED, UNLIMITED, CONFLATED). Отличается от Flow тем, что является hot и может терять данные без подписчиков."
+    },
+{
+      "id": 85,
+      "categoryId": 1,
+      "description": "Что такое Sealed классы в Kotlin?",
+      "answer": "Sealed классы - ограниченная иерархия классов где все подклассы должны быть объявлены в том же файле. Улучшенная версия enum, когда каждый случай может иметь свое состояние и поведение. Идеальны для представления состояний."
+    },
+    {
+      "id": 86,
+      "categoryId": 1,
+      "description": "Чем отличается data class от обычного класса?",
+      "answer": "Data class автоматически генерирует equals(), hashCode(), toString(), copy() и componentN() функции. Предназначены для хранения данных. Обычные классы требуют ручной реализации этих методов. Data class не могут быть наследованы."
+    },
+    {
+      "id": 87,
+      "categoryId": 1,
+      "description": "Что такое extension functions?",
+      "answer": "Extension functions - функции, которые расширяют функциональность существующих классов без наследования. Объявляются как fun ClassName.functionName(). Не модифицируют оригинальный класс, являются static методами под капотом."
+    },
+    {
+      "id": 88,
+      "categoryId": 1,
+      "description": "Что такое lateinit и когда использовать?",
+      "answer": "lateinit позволяет отложить инициализацию non-null переменной. Используется когда инициализация происходит через DI или в lifecycle методах. Проверка на инициализацию через ::variable.isInitialized. Только для var в классах."
+    },
+    {
+      "id": 89,
+      "categoryId": 1,
+      "description": "Что такое делегаты в Kotlin?",
+      "answer": "Делегаты - паттерн через ключевое слово 'by'. Встроенные: lazy (ленивая инициализация), observable (observable свойства), vetoable (валидация значений). Можно создавать кастомные делегаты через operator functions."
+    },
+    {
+      "id": 90,
+      "categoryId": 1,
+      "description": "Чем отличается let, run, with, apply, also?",
+      "answer": "let: it, возвращает результат; run: this, возвращает результат; with: this, возвращает результат (не extension); apply: this, возвращает контекст; also: it, возвращает контекст. Выбор зависит от нужного контекста и возвращаемого значения."
+    },
+    {
+      "id": 91,
+      "categoryId": 1,
+      "description": "Что такое companion object?",
+      "answer": "Companion object - объект, объявленный внутри класса с ключевым словом companion. Служит для замены статических методов и полей из Java. Может реализовывать интерфейсы и иметь имя. Доступ через ClassName.MethodName без создания экземпляра."
+    },
+    {
+      "id": 92,
+      "categoryId": 1,
+      "description": "Как работает безопасный вызов (?.) и элвис оператор (?:) в Kotlin?",
+      "answer": "Безопасный вызов (?.) возвращает null если объект null, вместо NPE. Элвис оператор (?:) возвращает значение справа если слева null. Часто используются вместе: obj?.method() ?: defaultValue."
+    },
+    {
+      "id": 93,
+      "categoryId": 1,
+      "description": "Что такое inline функции в Kotlin?",
+      "answer": "Inline функции встраивают свой код в место вызова во время компиляции. Уменьшают overhead лямбда-выражений (не создают анонимные классы). Полезны для функций принимающих лямбды как параметры. Не подходят для больших функций."
+    },
+    {
+      "id": 94,
+      "categoryId": 1,
+      "description": "Чем отличается reified от обычного generic параметра?",
+      "answer": "Reified сохраняет информацию о типе во время выполнения, позволяя использовать instanceof и доступ к классу. Работает только с inline функции. Обычные generic параметры стираются во время выполнения (type erasure)."
+    },
+    {
+      "id": 95,
+      "categoryId": 1,
+      "description": "Что такое coroutine scope и dispatcher?",
+      "answer": "CoroutineScope определяет lifetime корутин через CoroutineContext. Dispatcher определяет поток выполнения: Dispatchers.IO для I/O, Dispatchers.Default для CPU, Dispatchers.Main для UI. Можно создавать кастомные dispatchers и scope."
+    },
+    {
+      "id": 96,
+      "categoryId": 1,
+      "description": "Как обрабатывать исключения в корутинах?",
+      "answer": "Через try-catch внутри корутины, CoroutineExceptionHandler для глобальной обработки, supervisorScope для изоляции исключений. launch бросает исключения автоматически, async требует await() для получения исключения."
+    },
+    {
+      "id": 97,
+      "categoryId": 1,
+      "description": "Что такое ViewModel в Android?",
+      "answer": "ViewModel - компонент архитектуры для хранения и управления UI-данными. Переживает изменения конфигурации. Не должен содержать ссылки на View или Context для избежания утечек памяти. Часть Android Jetpack."
+    },
+    {
+      "id": 98,
+      "categoryId": 1,
+      "description": "Что такое LiveData?",
+      "answer": "LiveData - observable data holder с awareness жизненного цикла. Автоматически обновляет только активные observers. Потокобезопасна. Часто используется с ViewModel для обновления UI при изменении данных."
+    },
+    {
+      "id": 99,
+      "categoryId": 1,
+      "description": "Чем отличается LiveData от Flow?",
+      "answer": "LiveData проще, имеет built-in lifecycle awareness. Flow более мощный, поддерживает complex transformations, multiple operators и лучше интегрируется с корутинами. Flow требует явного управления lifecycle через repeatOnLifecycle."
+    },
+    {
+      "id": 100,
+      "categoryId": 1,
+      "description": "Что такое Dependency Injection в Android?",
+      "answer": "DI - внедрение зависимостей вместо их создания внутри классов. В Android: Dagger/Hilt (компилятор-based), Koin (DSL-based). Упрощает тестирование, уменьшает coupling, упрощает управление зависимостями и их lifetime."
+    },
+    {
+      "id": 101,
+      "categoryId": 1,
+      "description": "Что такое Room Persistence Library?",
+      "answer": "Room - библиотека для работы с SQLite в Android. Предоставляет абстракцию через аннотации (@Entity, @Dao, @Database). Обеспечивает проверку SQL запросов во время компиляции и интеграцию с LiveData/Flow."
+    },
+    {
+      "id": 102,
+      "categoryId": 1,
+      "description": "Что такое WorkManager?",
+      "answer": "WorkManager - API для отложенных и гарантированно выполняемых фоновых задач. Учитывает версию Android и выбирает оптимальный способ выполнения. Поддерживает constraints (сеть, зарядка)."
+    },
+    {
+      "id": 103,
+      "categoryId": 1,
+      "description": "Что такое Navigation Component?",
+      "answer": "Navigation Component - библиотека для навигации между фрагментами. Включает NavGraph, NavController, NavHost. Упрощает передачу данных, анимации переходов и глубокие ссылки."
+    },
+    {
+      "id": 104,
+      "categoryId": 1,
+      "description": "Что такое Data Binding и View Binding?",
+      "answer": "Data Binding - связывание данных UI с источниками данных в XML. View Binding - генерация классов для безопасного доступа к view. View Binding проще, Data Binding мощнее но сложнее."
+    },
+    {
+      "id": 105,
+      "categoryId": 1,
+      "description": "Что такое Paging Library?",
+      "answer": "Paging Library - загрузка данных постранично. Поддерживает разные источники (сеть, БД). Предоставляет PagingData, Pager, PagingSource. Интегрируется с RecyclerView и Coroutines/Flow."
+    },
+    {
+      "id": 106,
+      "categoryId": 1,
+      "description": "Что такое Dagger Hilt?",
+      "answer": "Hilt - упрощенная версия Dagger для Android. Автоматическая генерация компонентов для Android классов. Упрощает настройку DI через аннотации @HiltAndroidApp, @AndroidEntryPoint."
+    },
+    {
+      "id": 107,
+      "categoryId": 1,
+      "description": "Что такое Jetpack Compose?",
+      "answer": "Jetpack Compose - modern declarative UI toolkit для Android. Описание UI через composable функции. Отказ от XML layouts. Поддержка state management, themes, animations. Работает с ViewModel и Coroutines."
+    },
+    {
+      "id": 108,
+      "categoryId": 1,
+      "description": "Что такое Clean Architecture в Android?",
+      "answer": "Clean Architecture - разделение на слои: domain (бизнес-логика), data (источники данных), presentation (UI). Слои независимы, зависимости направлены внутрь. Использует Use Cases, Repositories, Dependency Injection."
+    },
+    {
+      "id": 109,
+      "categoryId": 1,
+      "description": "Что такое MVVM и MVI?",
+      "answer": "MVVM - Model-View-ViewModel с двусторонней привязкой данных. MVI - Model-View-Intent с односторонним потоком данных и неизменяемым state. MVI проще для тестирования и отладки, но более boilerplate."
+    },
+    {
+      "id": 110,
+      "categoryId": 1,
+      "description": "Что такое SSL Pinning?",
+      "answer": "SSL Pinning - защита от MITM атак через привязку к конкретным SSL сертификатам или публичным ключам. Реализуется через Network Security Config или кастомные TrustManager. Увеличивает безопасность но усложняет обновления сертификатов."
+    },
+    {
+      "id": 111,
+      "categoryId": 1,
+      "description": "Что такое ProGuard и R8?",
+      "answer": "ProGuard и R8 - инструменты для обфускации, минификации и оптимизации кода. R8 - более современная замена ProGuard. Удаляют неиспользуемый код, переименовывают классы/методы, оптимизируют байткод для уменьшения размера APK."
+    },
+    {
+      "id": 112,
+      "categoryId": 1,
+      "description": "Что такое Android App Bundle?",
+      "answer": "AAB - формат публикации приложений вместо APK. Позволяет Google Play генерировать оптимизированные APK для разных устройств. Уменьшает размер загружаемого приложения для пользователей."
+    },
+    {
+      "id": 113,
+      "categoryId": 1,
+      "description": "Что такое Dynamic Feature Modules?",
+      "answer": "Динамические feature модули - возможность загрузки частей приложения по требованию. Уменьшают初始 размер приложения. Поддерживают conditional delivery и on-demand delivery."
+    },
+    {
+      "id": 114,
+      "categoryId": 1,
+      "description": "Как работает память в Android?",
+      "answer": "Android использует managed memory (Java heap) и native memory. Dalvik/ART управляют heap через garbage collection. Важно избегать memory leaks (утечек через статические ссылки, немаркированные Handler'ы, неотписанные подписки)."
+    },
+    {
+      "id": 115,
+      "categoryId": 1,
+      "description": "Что такое ANR и как избежать?",
+      "answer": "ANR (Application Not Responding) - когда главный поток блокирован более 5 секунд. Избегать: выносить тяжелые операции в фоновые потоки, использовать Coroutines/WorkManager, избегать синхронных вызовов на главном потоке."
+    },
+    {
+      "id": 116,
+      "categoryId": 1,
+      "description": "Что такое StrictMode?",
+      "answer": "StrictMode - инструмент для обнаружения проблем производительности и безопасности во время разработки. Обнаруживает disk I/O и network operations на главном потоке, утечки ресурсов."
+    },
+    {
+      "id": 117,
+      "categoryId": 1,
+      "description": "Как тестировать Android приложения?",
+      "answer": "Unit tests (JUnit, Mockito), Integration tests (Espresso, UI Automator), End-to-end tests. Использовать AndroidX Test, тестовые doubles. Robolectric для тестов без эмулятора."
+    },
+    {
+      "id": 118,
+      "categoryId": 1,
+      "description": "Что такое CI/CD для Android?",
+      "answer": "CI/CD - автоматизация сборки, тестирования и распространения приложений. Инструменты: GitHub Actions, GitLab CI, Jenkins. Этапы: статический анализ, сборка, тестирование, деплой."
+    },
+    {
+      "id": 119,
+      "categoryId": 1,
+      "description": "Что такое Firebase в Android?",
+      "answer": "Firebase - платформа от Google для мобильной разработки. Предоставляет: Analytics, Crashlytics, Cloud Messaging, Remote Config, Authentication, Firestore. Упрощает backend разработку и мониторинг."
+    },
+    {
+      "id": 120,
+      "categoryId": 1,
+      "description": "Что такое Android Jetpack?",
+      "answer": "Jetpack - набор библиотек для упрощения Android разработки. Включает: Architecture Components, UI, Behavior, Foundation. Ускоряет разработку и улучшает качество кода."
+    },
+{
+      "id": 121,
+      "categoryId": 1,
+      "description": "Что такое default method в интерфейсе?",
+      "answer": "Default method - метод с реализацией по умолчанию в интерфейсе (добавлен в Java 8). Позволяет добавлять новые методы в интерфейсы без нарушения обратной совместимости. Классы могут использовать реализацию по умолчанию или переопределить ее."
+    },
+    {
+      "id": 122,
+      "categoryId": 1,
+      "description": "Что такое static method в интерфейсе?",
+      "answer": "Static method в интерфейсе (Java 8+) - метод, который принадлежит интерфейсу, а не его экземплярам. Вызывается через InterfaceName.method(). Используется для утилитных функций, которые логически связаны с интерфейсом."
+    },
+    {
+      "id": 123,
+      "categoryId": 1,
+      "description": "Как использовать Optional в реальном коде?",
+      "answer": "Использовать Optional для возвращаемых значений методов, а не параметров или полей. Методы: orElse(), orElseGet() для значений по умолчанию, orElseThrow() для исключений, ifPresent() для side effects, map() и flatMap() для преобразований. Избегать Optional.isPresent() + get()."
+    },
+    {
+      "id": 124,
+      "categoryId": 1,
+      "description": "Что такое method reference ClassName::new?",
+      "answer": "ClassName::new - reference на конструктор класса. Используется в stream API и лямбда-выражениях где требуется Supplier функционального интерфейса. Пример: stream.map(Employee::new) создает новые объекты Employee."
+    },
+    {
+      "id": 125,
+      "categoryId": 1,
+      "description": "Как работает Stream.of?",
+      "answer": "Stream.of() создает stream из переданных элементов. Принимает varargs аргументы. Для примитивов лучше использовать IntStream.of(), LongStream.of() чтобы избежать autoboxing. Stream.of(null) создаст stream с одним элементом null."
+    },
+    {
+      "id": 126,
+      "categoryId": 1,
+      "description": "Что такое Collectors.groupingBy?",
+      "answer": "Collectors.groupingBy - коллектор для группировки элементов stream по ключу. Может принимать classifier функцию и downstream коллектор. Пример: groupingBy(Employee::getDepartment, counting()) подсчитает сотрудников по отделам."
+    },
+    {
+      "id": 127,
+      "categoryId": 1,
+      "description": "Что такое java.util.Optional vs Guava Optional?",
+      "answer": "java.util.Optional (Java 8+) - официальная реализация, Guava Optional - библиотечная (до Java 8). Отличаются API: Guava имеет additional methods как transform(), or(). Рекомендуется использовать java.util.Optional для новых проектов."
+    },
+    {
+      "id": 128,
+      "categoryId": 1,
+      "description": "Как исправить ConcurrentModificationException в for-each?",
+      "answer": "Использовать Iterator и его remove() метод, либо копировать коллекцию перед итерацией (new ArrayList<>(collection)), либо использовать concurrent коллекции (CopyOnWriteArrayList), либо stream filter для создания новой коллекции без удаляемых элементов."
+    },
+    {
+      "id": 129,
+      "categoryId": 1,
+      "description": "Что делает java.util.Collections.unmodifiableList?",
+      "answer": "Возвращает unmodifiable view исходного list. Изменения в исходном list отражаются в view, но сам view нельзя модифицировать (бросает UnsupportedOperationException). Это wrapper, а не копия."
+    },
+    {
+      "id": 130,
+      "categoryId": 1,
+      "description": "Как использовать java.util.concurrent.Flow (Reactive-Streams) в JDK 9?",
+      "answer": "Flow API предоставляет интерфейсы для reactive streams: Publisher, Subscriber, Subscription, Processor. Используется для асинхронной обработки потоков данных с back-pressure. Реализации: JDK не предоставляет, нужно использовать внешние (RxJava, Reactor)."
+    },
+    {
+      "id": 131,
+      "categoryId": 1,
+      "description": "Что такое record (Java 14) и как он помогает?",
+      "answer": "Record - специальный класс для хранения данных (final поля). Автоматически генерирует constructor, getters, equals(), hashCode(), toString(). Уменьшает boilerplate код. Объявление: record Point(int x, int y) { }"
+    },
+    {
+      "id": 132,
+      "categoryId": 1,
+      "description": "Что такое sealed classes (Java 17) и их назначение?",
+      "answer": "Sealed classes - классы/интерфейсы, которые ограничивают, какие классы могут их наследовать/реализовывать. Улучшают безопасность итерации и pattern matching. Объявление: sealed class Shape permits Circle, Square { }"
+    },
+    {
+      "id": 133,
+      "categoryId": 1,
+      "description": "Как использовать Pattern Matching for instanceof (Java 16)?",
+      "answer": "Позволяет объявлять переменную непосредственно в instanceof проверке: if (obj instanceof String s) { return s.length(); }. Упрощает код, устраняет необходимость явного приведения типа."
+    },
+    {
+      "id": 134,
+      "categoryId": 1,
+      "description": "Что делает switch expression (Java 14) и как его писать?",
+      "answer": "Switch expression возвращает значение и может использоваться в выражениях. Использует -> синтаксис, не требует break, поддерживает multiple case labels. Пример: return switch (day) { case MONDAY, FRIDAY -> \"weekend\"; default -> \"workday\"; };"
+    },
+    {
+      "id": 135,
+      "categoryId": 1,
+      "description": "Что такое Text Blocks (Java 15) и пример?",
+      "answer": "Text Blocks - многострочные строковые литералы с сохранением форматирования. Обрамляются тройными кавычками. Пример: String html = \"\"\"<html><body><p>Hello World</p></body></html>\"\"\";"
+    },
+    {
+      "id": 136,
+      "categoryId": 1,
+      "description": "Что такое Virtual Threads (Project Loom) – ожидание?",
+      "answer": "Virtual Threads - легковесные потоки, управляемые JVM, а не ОС. Позволяют создавать миллионы потоков с минимальным overhead. Решают проблему blocking I/O в традиционных потоках. В настоящее время в preview стадии в JDK."
+    },
+    {
+      "id": 137,
+      "categoryId": 1,
+      "description": "Как конфигурировать GC для минимизации пауз в реальном Android-приложении?",
+      "answer": "Использовать G1GC или ZGC (если доступны), настроить -XX:MaxGCPauseMillis, увеличить heap size, избегать memory leaks, использовать memory profiler для анализа, минимизировать object allocation в критичных путях, использовать object pools для часто создаваемых объектов."
     },
   ]
 }
