@@ -821,6 +821,6 @@
       "categoryId": 1,
       "description": "Как конфигурировать GC для минимизации пауз в реальном Android-приложении?",
       "answer": "Использовать G1GC или ZGC (если доступны), настроить -XX:MaxGCPauseMillis, увеличить heap size, избегать memory leaks, использовать memory profiler для анализа, минимизировать object allocation в критичных путях, использовать object pools для часто создаваемых объектов."
-    },
+    }
   ]
 }
