@@ -1,1 +1,909 @@
-
+{
+  "questions": [
+    {
+      "id": 1,
+      "categoryId": 2,
+      "description": "Что такое корутины в Kotlin и чем они отличаются от потоков?",
+      "answer": "Корутины - это легковесные потоки для асинхронного программирования. В отличие от обычных потоков, корутины не блокируют системные потоки, а приостанавливают выполнение. Они значительно эффективнее: можно запускать тысячи корутин одновременно, тогда как потоки ограничены ресурсами системы. Корутины используют концепцию suspension points и работают на основе Continuation Passing Style."
+    },
+    {
+      "id": 2,
+      "categoryId": 2,
+      "description": "Как запустить корутину и какие dispatchers доступны?",
+      "answer": "Корутины запускаются через builders: launch для fire-and-forget и async для возврата результата. Доступные диспетчеры: Dispatchers.Main - для UI операций, Dispatchers.IO - для I/O операций (сетевые запросы, работа с БД), Dispatchers.Default - для CPU-intensive задач, Dispatchers.Unconfined - без привязки к конкретному потоку. Пример: GlobalScope.launch(Dispatchers.IO) { /* код */ }"
+    },
+    {
+      "id": 3,
+      "categoryId": 2,
+      "description": "Чем отличаются launch и async?",
+      "answer": "launch запускает корутину которая не возвращает результат (возвращает Job), async запускает корутину которая возвращает результат (возвращает Deferred<T>). Deferred требует вызова await() для получения результата и может бросать исключения. launch используется для side-effects, async - для вычислений с результатом."
+    },
+    {
+      "id": 4,
+      "categoryId": 2,
+      "description": "Что такое suspend функции и как они работают?",
+      "answer": "Suspend функции - это функции которые могут быть приостановлены и возобновлены без блокировки потока. Они работают только внутри корутин или других suspend функций. Компилятор преобразует их в state machine с callback'ами. Suspend функции не блокируют поток, а освобождают его для других задач во время ожидания."
+    },
+    {
+      "id": 5,
+      "categoryId": 2,
+      "description": "Как переключать контекст выполнения в корутинах?",
+      "answer": "Для переключения контекста используется withContext(). Это suspend функция которая временно меняет контекст выполнения: suspend fun fetchData() = withContext(Dispatchers.IO) { /* сетевой запрос */ }. После выполнения withContext корутина возвращается в исходный контекст."
+    },
+    {
+      "id": 6,
+      "categoryId": 2,
+      "description": "Что такое Structured Concurrency?",
+      "answer": "Structured Concurrency - принцип организации корутин где дочерние корутины привязаны к родительскому scope. При отмене родительской корутины автоматически отменяются все дочерние. Это предотвращает утечки корутин и обеспечивает корректную отмену операций. Реализуется через CoroutineScope и coroutineScope builder."
+    },
+    {
+      "id": 7,
+      "categoryId": 2,
+      "description": "Как отменить корутину и обработать отмену?",
+      "answer": "Отмена через job.cancel() или scope.cancel(). Корутина должна проверять isActive и реагировать на CancellationException. Для обработки отмены использовать try-finally или invokeOnCompletion: job.invokeOnCompletion { cause -> if (cause is CancellationException) { /* cleanup */ } }"
+    },
+    {
+      "id": 8,
+      "categoryId": 2,
+      "description": "Что такое SupervisorJob и когда его использовать?",
+      "answer": "SupervisorJob - особый тип Job где ошибка одной дочерней корутины не отменяет другие дочерние корутины. Используется когда задачи независимы и failure одной не должен влиять на другие. Создается через SupervisorJob() или supervisorScope {}."
+    },
+    {
+      "id": 9,
+      "categoryId": 2,
+      "description": "Как привязать корутины к жизненному циклу Android компонентов?",
+      "answer": "Использовать lifecycleScope в Activity/Fragment (автоматически отменяется при destroy) или viewModelScope в ViewModel (отменяется при cleared). Для Flow использовать repeatOnLifecycle(Lifecycle.State.STARTED) для безопасного сбора данных с учетом lifecycle."
+    },
+    {
+      "id": 10,
+      "categoryId": 2,
+      "description": "Что такое Channel и какие типы Channel существуют?",
+      "answer": "Channel - горячий поток данных для коммуникации между корутинами. Типы: RENDEZVOUS (0 capacity), BUFFERED (64 по умолчанию), UNLIMITED (Int.MAX_VALUE), CONFLATED (хранит только последнее значение). Каждый тип имеет различное поведение при переполнении."
+    },
+    {
+      "id": 11,
+      "categoryId": 2,
+      "description": "Как конвертировать Channel в Flow?",
+      "answer": "Использовать extension-метод .receiveAsFlow(): val flow = channel.receiveAsFlow(). Это создает cold flow который будет получать данные из channel при коллекции. Важно: channel должен быть правильно закрыт после использования."
+    },
+    {
+      "id": 12,
+      "categoryId": 2,
+      "description": "Что такое StateFlow и SharedFlow?",
+      "answer": "StateFlow - observable flow с текущим состоянием (имеет value), требует начальное значение. SharedFlow - более общий publish-subscribe flow без текущего значения. StateFlow = SharedFlow с replay=1 и distinctUntilChanged(). Оба являются hot flows."
+    },
+    {
+      "id": 13,
+      "categoryId": 2,
+      "description": "Как запустить и коллектить Flow в ViewModel?",
+      "answer": "В ViewModel использовать viewModelScope.launch и collect: viewModelScope.launch { myFlow.collect { /* handle value */ } }. Для UI использовать collectAsState() в Compose или repeatOnLifecycle() во View-based UI чтобы избежать утечек памяти."
+    },
+    {
+      "id": 14,
+      "categoryId": 2,
+      "description": "Что делает оператор flowOn?",
+      "answer": "flowOn() меняет контекст выполнения для upstream операторов (тех что до flowOn). Downstream операторы выполняются в исходном контексте. Пример: flow { /* IO work */ }.flowOn(Dispatchers.IO).map { /* UI work */ } - map выполняется в исходном контексте."
+    },
+    {
+      "id": 15,
+      "categoryId": 2,
+      "description": "Как обрабатывать исключения в Flow?",
+      "answer": "Использовать оператор catch: flow.catch { e -> /* handle error */ emit(...) }. Или обернуть в try-catch в collect. Для глобальной обработки использовать CoroutineExceptionHandler в scope. Важно: catch ловит только upstream исключения."
+    },
+    {
+      "id": 16,
+      "categoryId": 2,
+      "description": "Что такое combine и zip операторы?",
+      "answer": "combine - объединяет последние значения из multiple flows, emits при изменении любого из flows. zip - объединяет соответствующие значения (по парно), ждет значения из всех flows. combine для независимых потоков, zip для синхронизированных."
+    },
+    {
+      "id": 17,
+      "categoryId": 2,
+      "description": "Как построить cold Flow с помощью builder?",
+      "answer": "Использовать flow { ... } builder с emit() для отправки значений: fun myFlow(): Flow<Int> = flow { for (i in 1..10) { emit(i); delay(1000) } }. Flow cold - начинает emitting только при наличии collector'а."
+    },
+    {
+      "id": 18,
+      "categoryId": 2,
+      "description": "Что делает оператор onEach?",
+      "answer": "onEach - промежуточный оператор который выполняется для каждого элемента перед передачей downstream. Полезен для side-effects: flow.onEach { println(it) }.collect(). Не меняет элементы, только выполняет действие."
+    },
+    {
+      "id": 19,
+      "categoryId": 2,
+      "description": "Что такое flattenMerge и когда его использовать?",
+      "answer": "flattenMerge - преобразует Flow<Flow<T>> в Flow<T> с параллельной обработкой внутренних flows. Контролирует concurrency через параметр concurrency. Используется когда нужно обрабатывать multiple async операции параллельно."
+    },
+    {
+      "id": 20,
+      "categoryId": 2,
+      "description": "Как создать потокобезопасный MutableStateFlow?",
+      "answer": "MutableStateFlow уже потокобезопасен. Все операции атомарны. Для сложных обновлений использовать update { current -> newValue } для atomic compare-and-set операций. Пример: _state.update { it.copy(loading = true) }"
+    },
+    {
+      "id": 21,
+      "categoryId": 2,
+      "description": "Что такое CoroutineStart и какие режимы запуска есть?",
+      "answer": "CoroutineStart определяет когда запускается корутина: DEFAULT - сразу, LAZY - только при start/join, ATOMIC - атомарно с возможностью отмены, UNDISPATCHED - сразу но без dispatch. LAZY полезен для отложенного запуска."
+    },
+    {
+      "id": 22,
+      "categoryId": 2,
+      "description": "Как использовать withTimeout и withTimeoutOrNull?",
+      "answer": "withTimeout - бросает TimeoutCancellationException по таймауту, withTimeoutOrNull - возвращает null. Оба отменяют корутину при таймауте. Пример: val result = withTimeoutOrNull(5000) { longRunningTask() }"
+    },
+    {
+      "id": 23,
+      "categoryId": 2,
+      "description": "Что такое select expression в корутинах?",
+      "answer": "select - выражение для ожидания multiple suspend функций и выбора первой завершившейся. Полезно для race conditions или ожидания нескольких каналов. Пример: select<String> { onReceive(channel1) { it } onReceive(channel2) { it } }"
+    },
+    {
+      "id": 24,
+      "categoryId": 2,
+      "description": "Как работать с исключениями в корутинах?",
+      "answer": "Исключения обрабатываются через try-catch в корутине или CoroutineExceptionHandler для глобальной обработки. launch бросает исключения автоматически, async требует await() для получения исключения. SupervisorJob не распространяет исключения."
+    },
+    {
+      "id": 25,
+      "categoryId": 2,
+      "description": "Что такое Mutex и когда его использовать?",
+      "answer": "Mutex - mutual exclusion для корутин. Обеспечивает thread safety без блокировки потоков. Используется для защиты shared mutable state. Пример: mutex.withLock { sharedState++ }"
+    },
+    {
+      "id": 26,
+      "categoryId": 2,
+      "description": "Как тестировать корутины?",
+      "answer": "Использовать kotlinx-coroutines-test: runTest { /* тестовый код */ }, advanceUntilIdle(), TestDispatcher. Заменять Dispatchers.Main на TestDispatcher в тестах. Использовать UnconfinedTestDispatcher для детерминированного выполнения."
+    },
+    {
+      "id": 27,
+      "categoryId": 2,
+      "description": "Что такое CoroutineScope и как создать custom scope?",
+      "answer": "CoroutineScope - область видимости для корутин. Создание: CoroutineScope(Dispatchers.IO + SupervisorJob()). Обязательно вызывать cancel() при завершении работы scope чтобы избежать утечек."
+    },
+    {
+      "id": 28,
+      "categoryId": 2,
+      "description": "Как использовать flow с Room database?",
+      "answer": "Room поддерживает Flow из коробки. Dao метод может возвращать Flow<List<T>> который автоматически emits новые данные при изменении БД. Пример: @Query(\"SELECT * FROM users\") fun getUsers(): Flow<List<User>>"
+    },
+    {
+      "id": 29,
+      "categoryId": 2,
+      "description": "Что такое stateIn оператор?",
+      "answer": "stateIn преобразует cold flow в hot StateFlow и кэширует последнее состояние: .stateIn(scope, started = SharingStarted.WhileSubscribed(5000), initialValue). started контролирует когда flow начинает и прекращает работу."
+    },
+    {
+      "id": 30,
+      "categoryId": 2,
+      "description": "Как обрабатывать backpressure в Flow?",
+      "answer": "Flow автоматически обрабатывает backpressure через buffer() оператор. Можно настроить размер buffer и стратегию обработки переполнения: .buffer(capacity = 64, onBufferOverflow = BufferOverflow.SUSPEND)"
+    },
+    {
+      "id": 31,
+      "categoryId": 2,
+      "description": "Что такое SharedFlow и как его создать?",
+      "answer": "SharedFlow создается через MutableSharedFlow: val sharedFlow = MutableSharedFlow<String>(replay = 0, extraBufferCapacity = 64). replay - количество последних значений для новых подписчиков, extraBufferCapacity - размер буфера."
+    },
+    {
+      "id": 32,
+      "categoryId": 2,
+      "description": "Как использовать корутины с Retrofit?",
+      "answer": "Retrofit поддерживает suspend функции. Интерфейс API: @GET(\"users\") suspend fun getUsers(): List<User>. Вызов в корутине: withContext(Dispatchers.IO) { api.getUsers() }"
+    },
+    {
+      "id": 33,
+      "categoryId": 2,
+      "description": "Что такое async builder и как обрабатывать ошибки?",
+      "answer": "async запускает корутину которая возвращает Deferred<T>. Ошибки обрабатываются через try-catch в await() или через awaitAll() для multiple async операций. Пример: val result = try { deferred.await() } catch (e: Exception) { null }"
+    },
+    {
+      "id": 34,
+      "categoryId": 2,
+      "description": "Как использовать корутины с WorkManager?",
+      "answer": "WorkManager поддерживает корутины через CoroutineWorker. Переопределить doWork(): suspend fun Result.doWork() = withContext(Dispatchers.IO) { /* work */ return Result.success() }"
+    },
+    {
+      "id": 35,
+      "categoryId": 2,
+      "description": "Что такое launch и async с параметром start?",
+      "answer": "Параметр start контролирует когда запускается корутина: CoroutineStart.DEFAULT - сразу, LAZY - при start/join. Пример: val job = launch(start = CoroutineStart.LAZY) { /* code */ }; job.start()"
+    },
+    {
+      "id": 36,
+      "categoryId": 2,
+      "description": "Как отменить корутину с таймаутом?",
+      "answer": "Использовать withTimeout или Job.cancelAfter(timeMillis). withTimeout бросает исключение, cancelAfter просто отменяет корутину. Пример: job.cancelAfter(5000) // отменить через 5 секунд"
+    },
+    {
+      "id": 37,
+      "categoryId": 2,
+      "description": "Что такое produce builder?",
+      "answer": "produce - builder для создания корутины которая produces values в Channel. Возвращает ReceiveChannel. Пример: val channel = produce { for (i in 1..5) send(i) }"
+    },
+    {
+      "id": 38,
+      "categoryId": 2,
+      "description": "Как использовать actor builder?",
+      "answer": "actor - builder для создания корутины которая обрабатывает messages из Channel. Полезен для построения actor model. Пример: val actor = actor<String> { for (msg in channel) { process(msg) } }"
+    },
+    {
+      "id": 39,
+      "categoryId": 2,
+      "description": "Что такое CoroutineExceptionHandler?",
+      "answer": "CoroutineExceptionHandler - обработчик не пойманных исключений в корутинах. Устанавливается в CoroutineScope. Пример: val handler = CoroutineExceptionHandler { _, e -> println(\"Caught $e\") }; CoroutineScope(Dispatchers.IO + handler)"
+    },
+    {
+      "id": 40,
+      "categoryId": 2,
+      "description": "Как использовать корутины с Spring Boot?",
+      "answer": "Spring Boot поддерживает корутины через @Async и Deferred. Контроллеры могут возвращать Flow или suspend функции. Необходима зависимость spring-boot-starter-webflux и конфигурация @EnableAsync."
+    },
+    {
+      "id": 41,
+      "categoryId": 2,
+      "description": "Что такое flowOn и как он влияет на контекст?",
+      "answer": "flowOn меняет контекст только для upstream операторов. Downstream операторы выполняются в контексте коллектора. Важно: multiple flowOn не stack'аются, последний flowOn определяет контекст для всего upstream."
+    },
+    {
+      "id": 42,
+      "categoryId": 2,
+      "description": "Как использовать shareIn оператор?",
+      "answer": "shareIn преобразует cold flow в hot SharedFlow: .shareIn(scope, started = SharingStarted.WhileSubscribed(), replay = 1). Полезен для sharing expensive flow между multiple collectors."
+    },
+    {
+      "id": 43,
+      "categoryId": 2,
+      "description": "Что такое callbackFlow и как его использовать?",
+      "answer": "callbackFlow - builder для преобразования callback-based API в Flow. Пример: fun observeChanges(): Flow<Data> = callbackFlow { val callback = { data: Data -> trySend(data) }; registerCallback(callback); awaitClose { unregisterCallback(callback) } }"
+    },
+    {
+      "id": 44,
+      "categoryId": 2,
+      "description": "Как обрабатывать отмену в suspend функциях?",
+      "answer": "Проверять isActive периодически в long-running операциях. Использовать yield() для проверки отмены. Обрабатывать CancellationException для cleanup. Пример: while (isActive) { /* work */ yield() }"
+    },
+    {
+      "id": 45,
+      "categoryId": 2,
+      "description": "Что такое NonCancellable контекст?",
+      "answer": "NonCancellable - контекст который нельзя отменить. Используется для cleanup операций которые должны завершиться даже при отмене корутины. Пример: withContext(NonCancellable) { /* cleanup */ }"
+    },
+    {
+      "id": 46,
+      "categoryId": 2,
+      "description": "Как использовать корутины с Java CompletableFuture?",
+      "answer": "Взаимодействие через Future.await() и CompletableFuture.asDeferred(). Пример: val deferred = future.asDeferred(); val result = deferred.await(). Или CompletableFuture.supplyAsync { block }.asCompletableFuture()"
+    },
+    {
+      "id": 47,
+      "categoryId": 2,
+      "description": "Что такое Dispatchers.IO и как он работает?",
+      "answer": "Dispatchers.IO - диспетчер для I/O операций с динамическим пулом потоков. Автоматически scale'ится при нагрузке. Использует separate pool от Dispatchers.Default чтобы не блокировать CPU операции."
+    },
+    {
+      "id": 48,
+      "categoryId": 2,
+      "description": "Как использовать flow с Pagination?",
+      "answer": "Paging 3 поддерживает Flow через PagingData. Пример: fun getPagedData(): Flow<PagingData<Item>> = Pager(config) { MyPagingSource(api) }.flow"
+    },
+    {
+      "id": 49,
+      "categoryId": 2,
+      "description": "Что такое distinctUntilChanged оператор?",
+      "answer": "distinctUntilChanged - фильтрует последовательные повторяющиеся значения. Полезен для предотвращения лишних emissions при unchanged data. Работает через equals() сравнение."
+    },
+    {
+      "id": 50,
+      "categoryId": 2,
+      "description": "Как дебажить корутины?",
+      "answer": "Включить debug mode: -Dkotlinx.coroutines.debug. Использовать CoroutineName для именования корутин. В IDE: breakpoints с suspend functions support. Логирование с coroutineId."
+    },
+    {
+  "questions": [
+    {
+      "id": 51,
+      "categoryId": 2,
+      "description": "Что такое оператор debounce в Flow и когда его использовать?",
+      "answer": "Оператор debounce задерживает emission элементов и emits только последний элемент после периода задержки. Особенно полезен для обработки пользовательского ввода в поиске, чтобы избежать избыточных запросов при быстром наборе текста. Пример: searchFlow.debounce(300).collect { query -> performSearch(query) }"
+    },
+    {
+      "id": 52,
+      "categoryId": 2,
+      "description": "Как использовать оператор filter в Flow?",
+      "answer": "Оператор filter позволяет фильтровать элементы flow по заданному условию. Он пропускает только те элементы, которые удовлетворяют предикату. Пример: numbersFlow.filter { it % 2 == 0 }.collect { evenNumber -> processEvenNumber(evenNumber) }"
+    },
+    {
+      "id": 53,
+      "categoryId": 2,
+      "description": "Что такое оператор map в Flow и как его применять?",
+      "answer": "Оператор map преобразует каждый элемент flow с помощью заданной функции. Он создает новый flow, где каждый элемент является результатом применения функции к исходному элементу. Пример: userFlow.map { it.name }.collect { userName -> displayUserName(userName) }"
+    },
+    {
+      "id": 54,
+      "categoryId": 2,
+      "description": "Как использовать оператор flatMapConcat в Flow?",
+      "answer": "Оператор flatMapConcat преобразует каждый элемент в новый flow и затем конкатенирует эти flows последовательно. Он ждет завершения каждого внутреннего flow перед началом следующего. Пример: categoryFlow.flatMapConcat { category -> getProductsByCategory(category) }.collect { product -> processProduct(product) }"
+    },
+    {
+      "id": 55,
+      "categoryId": 2,
+      "description": "Что такое оператор flatMapMerge и чем он отличается от flatMapConcat?",
+      "answer": "Оператор flatMapMerge преобразует каждый элемент в новый flow и затем merge'ит эти flows параллельно. В отличие от flatMapConcat, он не ждет завершения предыдущего flow. Параметр concurrency контролирует максимальное количество одновременно активных flows."
+    },
+    {
+      "id": 56,
+      "categoryId": 2,
+      "description": "Как использовать оператор scan в Flow?",
+      "answer": "Оператор scan похож на fold, но emits каждый промежуточный результат. Он применяет функцию к каждому элементу последовательно, накапливая результат. Пример: numbersFlow.scan(0) { accumulator, value -> accumulator + value }.collect { sum -> updateRunningTotal(sum) }"
+    },
+    {
+      "id": 57,
+      "categoryId": 2,
+      "description": "Что такое оператор reduce в Flow?",
+      "answer": "Оператор reduce применяет функцию к элементам flow последовательно и возвращает конечный результат (не flow). Он похож на fold, но использует первый элемент作为 начальное значение. Пример: val total = numbersFlow.reduce { acc, value -> acc + value }"
+    },
+    {
+      "id": 58,
+      "categoryId": 2,
+      "description": "Как использовать оператор fold в Flow?",
+      "answer": "Оператор fold применяет функцию к элементам flow последовательно с начальным значением и возвращает конечный результат. Пример: val total = numbersFlow.fold(0) { acc, value -> acc + value }"
+    },
+    {
+      "id": 59,
+      "categoryId": 2,
+      "description": "Что такое оператор catch и как обрабатывать ошибки в Flow?",
+      "answer": "Оператор catch перехватывает исключения из upstream и позволяет их обработать или emit альтернативные значения. Важно: catch не перехватывает исключения из downstream. Пример: flow.catch { e -> emitErrorState(e) }.collect { value -> processValue(value) }"
+    },
+    {
+      "id": 60,
+      "categoryId": 2,
+      "description": "Как использовать оператор retry в Flow?",
+      "answer": "Оператор retry повторяет collection flow при возникновении исключений. Можно указать максимальное количество попыток и условие для retry. Пример: apiFlow.retry(3) { it is NetworkException }.collect { data -> processData(data) }"
+    },
+    {
+      "id": 61,
+      "categoryId": 2,
+      "description": "Что такое оператор buffer и для чего он нужен?",
+      "answer": "Оператор buffer добавляет буфер между producer и consumer, позволяя producer'у emit элементы быстрее чем consumer их обрабатывает. Это может улучшить производительность при slow consumer. Пример: fastFlow.buffer(64).collect { slowProcessing(it) }"
+    },
+    {
+      "id": 62,
+      "categoryId": 2,
+      "description": "Как использовать оператор conflate в Flow?",
+      "answer": "Оператор conflate пропускает только последнее значение когда consumer busy, пропуская промежуточные значения. Полезен для обработки frequent updates где важны только последние данные. Пример: locationUpdates.conflate().collect { latestLocation -> updateMap(latestLocation) }"
+    },
+    {
+      "id": 63,
+      "categoryId": 2,
+      "description": "Что такое оператор combineLatest и когда его использовать?",
+      "answer": "Оператор combineLatest объединяет последние значения из multiple flows и emits новый результат когда любой из flows emits новое значение. Полезен для комбинирования нескольких источников данных. Пример: combineLatest(userFlow, settingsFlow) { user, settings -> UserWithSettings(user, settings) }"
+    },
+    {
+      "id": 64,
+      "categoryId": 2,
+      "description": "Как использовать оператор withIndex в Flow?",
+      "answer": "Оператор withIndex добавляет индекс к каждому элементу flow, преобразуя элементы в IndexedValue. Пример: itemsFlow.withIndex().collect { (index, item) -> processItem(index, item) }"
+    },
+    {
+      "id": 65,
+      "categoryId": 2,
+      "description": "Что такое оператор distinctUntilChangedBy и как его применять?",
+      "answer": "Оператор distinctUntilChangedBy фильтрует элементы based on specific property, пропуская только те элементы где указанное property изменилось. Пример: usersFlow.distinctUntilChangedBy { it.id }.collect { user -> updateUserDisplay(user) }"
+    },
+    {
+      "id": 66,
+      "categoryId": 2,
+      "description": "Как использовать оператор take в Flow?",
+      "answer": "Оператор take ограничивает количество элементов которые flow will emit. Пример: numbersFlow.take(5).collect { number -> processNumber(number) } // обработает только первые 5 чисел"
+    },
+    {
+      "id": 67,
+      "categoryId": 2,
+      "description": "Что такое оператор drop и когда его использовать?",
+      "answer": "Оператор drop пропускает первые N элементов flow. Полезен когда нужно игнорировать initial values. Пример: sensorReadings.drop(10).collect { reading -> processStableReading(reading) } // пропустить первые 10 показаний"
+    },
+    {
+      "id": 68,
+      "categoryId": 2,
+      "description": "Как использовать оператор transform в Flow?",
+      "answer": "Оператор transform provides more flexibility than map, позволяя emit multiple values для каждого input элемента или skip elements. Пример: numbersFlow.transform { value -> if (value > 0) emit(value * 2) }.collect { doubledValue -> processValue(doubledValue) }"
+    },
+    {
+      "id": 69,
+      "categoryId": 2,
+      "description": "Что такое оператор runningReduce в Flow?",
+      "answer": "Оператор runningReduce похож на scan, но использует первый элемент作为 начальное значение и не emits его отдельно. Он emits каждый промежуточный результат reduction. Пример: numbersFlow.runningReduce { acc, value -> acc + value }.collect { currentSum -> updateSumDisplay(currentSum) }"
+    },
+    {
+      "id": 70,
+      "categoryId": 2,
+      "description": "Как использовать оператор filterNot в Flow?",
+      "answer": "Оператор filterNot является противоположностью filter - он пропускает только те элементы которые НЕ удовлетворяют предикату. Пример: itemsFlow.filterNot { it.isArchived }.collect { activeItem -> processActiveItem(activeItem) }"
+    },
+    {
+      "id": 71,
+      "categoryId": 2,
+      "description": "Что такое оператор filterIsInstance в Flow?",
+      "answer": "Оператор filterIsInstance фильтрует элементы flow по типу, пропуская только элементы указанного типа. Пример: eventsFlow.filterIsInstance<ClickEvent>().collect { clickEvent -> handleClick(clickEvent) }"
+    },
+    {
+      "id": 72,
+      "categoryId": 2,
+      "description": "Как использовать оператор filterNotNull в Flow?",
+      "answer": "Оператор filterNotNull фильтрует null values из flow, пропуская только non-null элементы. Пример: nullableFlow.filterNotNull().collect { nonNullValue -> processValue(nonNullValue) }"
+    },
+    {
+      "id": 73,
+      "categoryId": 2,
+      "description": "Что такое оператор mapNotNull в Flow?",
+      "answer": "Оператор mapNotNull combines map и filterNotNull - преобразует элементы и фильтрует null результаты. Пример: stringsFlow.mapNotNull { it.toIntOrNull() }.collect { number -> processNumber(number) }"
+    },
+    {
+      "id": 74,
+      "categoryId": 2,
+      "description": "Как использовать оператор onStart в Flow?",
+      "answer": "Оператор onStart выполняет действие перед началом emission элементов. Полезен для initialization или showing loading indicators. Пример: dataFlow.onStart { showLoading() }.collect { data -> displayData(data) }"
+    },
+    {
+      "id": 75,
+      "categoryId": 2,
+      "description": "Что такое оператор onCompletion в Flow?",
+      "answer": "Оператор onCompletion выполняет действие после completion flow (нормального или с ошибкой). Полезен для cleanup или hiding loading indicators. Пример: dataFlow.onCompletion { hideLoading() }.collect { data -> displayData(data) }"
+    },
+    {
+      "id": 76,
+      "categoryId": 2,
+      "description": "Как использовать оператор onEach в Flow для side effects?",
+      "answer": "Оператор onEach выполняет действие для каждого элемента без изменения самого элемента. Идеален для side effects like logging или updating UI state. Пример: userFlow.onEach { user -> logUserAction(user) }.collect { user -> processUser(user) }"
+    },
+    {
+      "id": 77,
+      "categoryId": 2,
+      "description": "Что такое оператор onEmpty в Flow?",
+      "answer": "Оператор onEmpty выполняет действие когда flow completes without emitting any elements. Полезен для handling empty states. Пример: searchResultsFlow.onEmpty { showNoResults() }.collect { result -> displayResult(result) }"
+    },
+    {
+      "id": 78,
+      "categoryId": 2,
+      "description": "Как использовать оператор retryWhen в Flow?",
+      "answer": "Оператор retryWhen provides more control over retry logic чем простой retry. Он позволяет проверить исключение и решить whether to retry based on custom condition. Пример: apiFlow.retryWhen { cause, attempt -> attempt < 3 && cause is NetworkException }"
+    },
+    {
+      "id": 79,
+      "categoryId": 2,
+      "description": "Что такое оператор shareIn и как его использовать?",
+      "answer": "Оператор shareIn преобразует cold flow в hot SharedFlow, позволяя multiple collectors共享 одному producer'у. Важно указать started strategy (WhileSubscribed, Eagerly, Lazily). Пример: expensiveFlow.shareIn(scope, SharingStarted.WhileSubscribed(), replay = 1)"
+    },
+    {
+      "id": 80,
+      "categoryId": 2,
+      "description": "Как использовать оператор stateIn для преобразования в StateFlow?",
+      "answer": "Оператор stateIn преобразует cold flow в hot StateFlow. Требует начальное значение и CoroutineScope. Пример: dataFlow.stateIn(scope, SharingStarted.WhileSubscribed(), initialValue = Loading)"
+    },
+    {
+      "id": 81,
+      "categoryId": 2,
+      "description": "Что такое оператор callbackFlow и когда его использовать?",
+      "answer": "Оператор callbackFlow создает flow из callback-based API. Он provides awaitClose для cleanup. Пример: fun watchLocation(): Flow<Location> = callbackFlow { val callback = { location: Location -> trySend(location) }; registerCallback(callback); awaitClose { unregisterCallback(callback) } }"
+    },
+    {
+      "id": 82,
+      "categoryId": 2,
+      "description": "Как использовать оператор channelFlow?",
+      "answer": "Оператор channelFlow создает flow с Channel under the hood, позволяя emit values из multiple coroutines. Полезен для complex producer logic. Пример: fun mergeSources(): Flow<Data> = channelFlow { launch { source1.collect { send(it) } }; launch { source2.collect { send(it) } } }"
+    },
+    {
+      "id": 83,
+      "categoryId": 2,
+      "description": "Что такое оператор produceIn и как его использовать?",
+      "answer": "Оператор produceIn преобразует flow в ReceiveChannel. Полезен когда нужно integrated with existing channel-based code. Пример: val channel = numbersFlow.produceIn(scope); for (number in channel) { processNumber(number) }"
+    },
+    {
+      "id": 84,
+      "categoryId": 2,
+      "description": "Как использовать оператор receiveAsFlow с Channel?",
+      "answer": "Оператор receiveAsFlow преобразует ReceiveChannel в Flow. Пример: val flow = channel.receiveAsFlow(); flow.collect { value -> processValue(value) }"
+    },
+    {
+      "id": 85,
+      "categoryId": 2,
+      "description": "Что такое оператор flatMapLatest и когда его использовать?",
+      "answer": "Оператор flatMapLatest преобразует каждый элемент в новый flow и cancels предыдущий flow когда приходит новый элемент. Полезен для search suggestions где важен только latest query. Пример: searchQueryFlow.flatMapLatest { query -> performSearch(query) }"
+    },
+    {
+      "id": 86,
+      "categoryId": 2,
+      "description": "Как использовать оператор sample в Flow?",
+      "answer": "Оператор sample emits только последний элемент в течение period времени. Полезен для throttling frequent events. Пример: clickEvents.sample(1000).collect { event -> handleClick(event) } // не чаще чем раз в секунду"
+    },
+    {
+      "id": 87,
+      "categoryId": 2,
+      "description": "Что такое оператор windowed в Flow?",
+      "answer": "Оператор windowed группирует элементы в windows (списки) заданного размера. Может быть с step и partialWindows. Пример: numbersFlow.windowed(3, step = 1).collect { window -> processWindow(window) }"
+    },
+    {
+      "id": 88,
+      "categoryId": 2,
+      "description": "Как использовать оператор zipWithNext в Flow?",
+      "answer": "Оператор zipWithNext создает пары из каждого элемента со следующим элементом. Полезен для вычисления разниц или trends между последовательными значениями. Пример: readingsFlow.zipWithNext().collect { (current, next) -> calculateChange(current, next) }"
+    },
+    {
+      "id": 89,
+      "categoryId": 2,
+      "description": "Что такое оператор runningFold в Flow?",
+      "answer": "Оператор runningFold похож на scan но с explicit initial value. Он emits каждый промежуточный результат fold operation. Пример: numbersFlow.runningFold(0) { acc, value -> acc + value }.collect { currentSum -> updateSum(currentSum) }"
+    },
+    {
+      "id": 90,
+      "categoryId": 2,
+      "description": "Как использовать оператор distinctUntilChanged с custom comparer?",
+      "answer": "Оператор distinctUntilChanged может принимать custom comparer функцию для определения когда values считаются distinct. Пример: objectsFlow.distinctUntilChanged { old, new -> old.id == new.id }.collect { object -> processObject(object) }"
+    },
+    {
+      "id": 91,
+      "categoryId": 2,
+      "description": "Что такое оператор merge и как его использовать?",
+      "answer": "Оператор merge объединяет multiple flows в один, emitting элементы из всех flows как они приходят. Пример: merge(flow1, flow2, flow3).collect { value -> processValue(value) }"
+    },
+    {
+      "id": 92,
+      "categoryId": 2,
+      "description": "Как использовать оператор takeWhile в Flow?",
+      "answer": "Оператор takeWhile takes элементы пока predicate true, и затем completes flow. Пример: numbersFlow.takeWhile { it < 10 }.collect { number -> processNumber(number) }"
+    },
+    {
+      "id": 93,
+      "categoryId": 2,
+      "description": "Что такое оператор dropWhile в Flow?",
+      "answer": "Оператор dropWhile drops элементы пока predicate true, и затем emits все remaining элементы. Пример: numbersFlow.dropWhile { it < 5 }.collect { number -> processNumber(number) } // пропустить числа меньше 5"
+    },
+    {
+      "id": 94,
+      "categoryId": 2,
+      "description": "Как использовать оператор filterIndexed в Flow?",
+      "answer": "Оператор filterIndexed фильтрует элементы based on both value и index. Пример: itemsFlow.filterIndexed { index, item -> index % 2 == 0 && item.isValid }.collect { item -> processItem(item) }"
+    },
+    {
+      "id": 95,
+      "categoryId": 2,
+      "description": "Что такое оператор mapIndexed в Flow?",
+      "answer": "Оператор mapIndexed преобразует элементы используя both value и index. Пример: itemsFlow.mapIndexed { index, item -> ItemWithIndex(index, item) }.collect { itemWithIndex -> processItem(itemWithIndex) }"
+    },
+    {
+      "id": 96,
+      "categoryId": 2,
+      "description": "Как использовать оператор withIndex для получения индексов?",
+      "answer": "Оператор withIndex добавляет индекс к каждому элементу, преобразуя в IndexedValue. Пример: itemsFlow.withIndex().collect { (index, item) -> processItem(index, item) }"
+    },
+    {
+      "id": 97,
+      "categoryId": 2,
+      "description": "Что такое оператор onSubscription в SharedFlow?",
+      "answer": "Оператор onSubscription выполняет действие когда collector subscribes к SharedFlow. Полезен для initialization при первом подключении. Доступен только для SharedFlow."
+    },
+    {
+      "id": 98,
+      "categoryId": 2,
+      "description": "Как использовать оператор launchIn для запуска collection?",
+      "answer": "Оператор launchIn запускает collection flow в указанном scope, возвращая Job. Удобен когда не нужен результат collection. Пример: flow.onEach { updateUI(it) }.launchIn(viewModelScope)"
+    },
+    {
+      "id": 99,
+      "categoryId": 2,
+      "description": "Что такое оператор catch и как его комбинировать с retry?",
+      "answer": "Оператор catch можно комбинировать с retry для complex error handling. Сначала retry попытается повторить, затем catch обработает persistent errors. Пример: flow.retry(2).catch { e -> emitFallbackValue() }.collect { value -> processValue(value) }"
+    },
+    {
+      "id": 100,
+      "categoryId": 2,
+      "description": "Как использовать корутины и Flow в Android ViewModel?",
+      "answer": "В ViewModel использовать viewModelScope для запуска корутин. Для Flow: использовать stateIn для преобразования в StateFlow и наблюдать в UI через collectAsState. Пример: val uiState = dataFlow.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), initialValue)"
+    },
+    {
+  "questions": [
+    {
+      "id": 101,
+      "categoryId": 2,
+      "description": "Что такое оператор debounce в Flow и когда его использовать?",
+      "answer": "Оператор debounce задерживает emission элементов и emits только последний элемент после указанного периода задержки. Особенно полезен для обработки пользовательского ввода в поисковых запросах, чтобы избежать избыточных API вызовов при быстром наборе текста. Пример: searchQueryFlow.debounce(300).collect { query -> performSearch(query) }"
+    },
+    {
+      "id": 102,
+      "categoryId": 2,
+      "description": "Как использовать оператор filter в Flow для фильтрации данных?",
+      "answer": "Оператор filter позволяет фильтровать элементы flow по заданному условию. Он пропускает только те элементы, которые удовлетворяют предикатной функции. Пример: numbersFlow.filter { it % 2 == 0 }.collect { evenNumber -> processEvenNumber(evenNumber) }"
+    },
+    {
+      "id": 103,
+      "categoryId": 2,
+      "description": "Что такое оператор map в Flow и как его применять для преобразования данных?",
+      "answer": "Оператор map преобразует каждый элемент flow с помощью заданной функции-трансформера. Он создает новый flow, где каждый элемент является результатом применения функции к исходному элементу. Пример: userFlow.map { it.name }.collect { userName -> displayUserName(userName) }"
+    },
+    {
+      "id": 104,
+      "categoryId": 2,
+      "description": "Как использовать оператор flatMapConcat для последовательной обработки Flow?",
+      "answer": "Оператор flatMapConcat преобразует каждый элемент в новый flow и затем конкатенирует эти flows последовательно. Он ожидает завершения каждого внутреннего flow перед началом следующего. Пример: categoryFlow.flatMapConcat { category -> getProductsByCategory(category) }"
+    },
+    {
+      "id": 105,
+      "categoryId": 2,
+      "description": "Чем отличается flatMapMerge от flatMapConcat в Flow?",
+      "answer": "flatMapMerge преобразует каждый элемент в новый flow и merge'ит эти flows параллельно, тогда как flatMapConcat делает это последовательно. flatMapMerge может обрабатывать несколько внутренних flows одновременно с контролем уровня concurrency."
+    },
+    {
+      "id": 106,
+      "categoryId": 2,
+      "description": "Как использовать оператор scan для накопления значений в Flow?",
+      "answer": "Оператор scan применяет функцию к каждому элементу последовательно, emitting каждый промежуточный результат накопления. Пример: numbersFlow.scan(0) { acc, value -> acc + value }.collect { sum -> updateRunningTotal(sum) }"
+    },
+    {
+      "id": 107,
+      "categoryId": 2,
+      "description": "Что такое оператор reduce и когда его использовать?",
+      "answer": "Оператор reduce применяет функцию к элементам flow последовательно и возвращает конечный результат. Он использует первый элемент作为 начальное значение. Пример: val total = numbersFlow.reduce { acc, value -> acc + value }"
+    },
+    {
+      "id": 108,
+      "categoryId": 2,
+      "description": "Как использовать оператор fold с начальным значением?",
+      "answer": "Оператор fold применяет функцию к элементам flow с заданным начальным значением и возвращает конечный результат. Пример: val total = numbersFlow.fold(0) { acc, value -> acc + value }"
+    },
+    {
+      "id": 109,
+      "categoryId": 2,
+      "description": "Как обрабатывать ошибки с помощью оператора catch в Flow?",
+      "answer": "Оператор catch перехватывает исключения из upstream и позволяет их обработать или emit альтернативные значения. Важно: catch не перехватывает исключения из downstream. Пример: flow.catch { e -> emitErrorState(e) }"
+    },
+    {
+      "id": 110,
+      "categoryId": 2,
+      "description": "Как использовать оператор retry для повторных попыток в Flow?",
+      "answer": "Оператор retry повторяет collection flow при возникновении исключений. Можно указать максимальное количество попыток и условие для retry. Пример: apiFlow.retry(3) { it is NetworkException }"
+    },
+    {
+      "id": 111,
+      "categoryId": 2,
+      "description": "Что такое оператор buffer и для чего он нужен?",
+      "answer": "Оператор buffer добавляет буфер между producer и consumer, позволяя producer'у emit элементы быстрее чем consumer их обрабатывает. Пример: fastFlow.buffer(64).collect { slowProcessing(it) }"
+    },
+    {
+      "id": 112,
+      "categoryId": 2,
+      "description": "Как использовать оператор conflate для пропуска промежуточных значений?",
+      "answer": "Оператор conflate пропускает только последнее значение когда consumer busy, пропуская промежуточные значения. Пример: locationUpdates.conflate().collect { latestLocation -> updateMap(latestLocation) }"
+    },
+    {
+      "id": 113,
+      "categoryId": 2,
+      "description": "Что такое оператор combineLatest и когда его использовать?",
+      "answer": "Оператор combineLatest объединяет последние значения из multiple flows и emits новый результат когда любой из flows emits новое значение. Пример: combineLatest(userFlow, settingsFlow) { user, settings -> UserWithSettings(user, settings) }"
+    },
+    {
+      "id": 114,
+      "categoryId": 2,
+      "description": "Как использовать оператор withIndex для получения индексов элементов?",
+      "answer": "Оператор withIndex добавляет индекс к каждому элементу flow, преобразуя элементы в IndexedValue. Пример: itemsFlow.withIndex().collect { (index, item) -> processItem(index, item) }"
+    },
+    {
+      "id": 115,
+      "categoryId": 2,
+      "description": "Что такое оператор distinctUntilChangedBy и как его применять?",
+      "answer": "Оператор distinctUntilChangedBy фильтрует элементы based on specific property, пропуская только те элементы где указанное property изменилось. Пример: usersFlow.distinctUntilChangedBy { it.id }"
+    },
+    {
+      "id": 116,
+      "categoryId": 2,
+      "description": "Как использовать оператор take для ограничения количества элементов?",
+      "answer": "Оператор take ограничивает количество элементов которые flow will emit. Пример: numbersFlow.take(5).collect { number -> processNumber(number) }"
+    },
+    {
+      "id": 117,
+      "categoryId": 2,
+      "description": "Что такое оператор drop и когда его использовать?",
+      "answer": "Оператор drop пропускает первые N элементов flow. Пример: sensorReadings.drop(10).collect { reading -> processStableReading(reading) }"
+    },
+    {
+      "id": 118,
+      "categoryId": 2,
+      "description": "Как использовать оператор transform для гибкого преобразования Flow?",
+      "answer": "Оператор transform provides more flexibility than map, позволяя emit multiple values для каждого input элемента. Пример: numbersFlow.transform { value -> if (value > 0) emit(value * 2) }"
+    },
+    {
+      "id": 119,
+      "categoryId": 2,
+      "description": "Что такое оператор runningReduce и чем он отличается от scan?",
+      "answer": "Оператор runningReduce похож на scan, но использует первый элемент作为 начальное значение и не emits его отдельно. Пример: numbersFlow.runningReduce { acc, value -> acc + value }"
+    },
+    {
+      "id": 120,
+      "categoryId": 2,
+      "description": "Как использовать оператор filterNot для обратной фильтрации?",
+      "answer": "Оператор filterNot является противоположностью filter - он пропускает только те элементы которые НЕ удовлетворяют предикату. Пример: itemsFlow.filterNot { it.isArchived }"
+    },
+    {
+      "id": 121,
+      "categoryId": 2,
+      "description": "Что такое оператор filterIsInstance для фильтрации по типу?",
+      "answer": "Оператор filterIsInstance фильтрует элементы flow по типу, пропуская только элементы указанного типа. Пример: eventsFlow.filterIsInstance<ClickEvent>()"
+    },
+    {
+      "id": 122,
+      "categoryId": 2,
+      "description": "Как использовать оператор filterNotNull для удаления null значений?",
+      "answer": "Оператор filterNotNull фильтрует null values из flow, пропуская только non-null элементы. Пример: nullableFlow.filterNotNull()"
+    },
+    {
+      "id": 123,
+      "categoryId": 2,
+      "description": "Что такое оператор mapNotNull для преобразования и фильтрации?",
+      "answer": "Оператор mapNotNull combines map и filterNotNull - преобразует элементы и фильтрует null результаты. Пример: stringsFlow.mapNotNull { it.toIntOrNull() }"
+    },
+    {
+      "id": 124,
+      "categoryId": 2,
+      "description": "Как использовать оператор onStart для выполнения действий перед началом?",
+      "answer": "Оператор onStart выполняет действие перед началом emission элементов. Пример: dataFlow.onStart { showLoading() }"
+    },
+    {
+      "id": 125,
+      "categoryId": 2,
+      "description": "Что такое оператор onCompletion для cleanup операций?",
+      "answer": "Оператор onCompletion выполняет действие после completion flow. Пример: dataFlow.onCompletion { hideLoading() }"
+    },
+    {
+      "id": 126,
+      "categoryId": 2,
+      "description": "Как использовать оператор onEach для side effects?",
+      "answer": "Оператор onEach выполняет действие для каждого элемента без изменения самого элемента. Пример: userFlow.onEach { user -> logUserAction(user) }"
+    },
+    {
+      "id": 127,
+      "categoryId": 2,
+      "description": "Что такое оператор onEmpty для обработки пустых Flow?",
+      "answer": "Оператор onEmpty выполняет действие когда flow completes without emitting any elements. Пример: searchResultsFlow.onEmpty { showNoResults() }"
+    },
+    {
+      "id": 128,
+      "categoryId": 2,
+      "description": "Как использовать оператор retryWhen для условного retry?",
+      "answer": "Оператор retryWhen provides more control over retry logic чем простой retry. Пример: apiFlow.retryWhen { cause, attempt -> attempt < 3 && cause is NetworkException }"
+    },
+    {
+      "id": 129,
+      "categoryId": 2,
+      "description": "Что такое оператор shareIn для преобразования в SharedFlow?",
+      "answer": "Оператор shareIn преобразует cold flow в hot SharedFlow. Пример: expensiveFlow.shareIn(scope, SharingStarted.WhileSubscribed(), replay = 1)"
+    },
+    {
+      "id": 130,
+      "categoryId": 2,
+      "description": "Как использовать оператор stateIn для StateFlow?",
+      "answer": "Оператор stateIn преобразует cold flow в hot StateFlow. Пример: dataFlow.stateIn(scope, SharingStarted.WhileSubscribed(), initialValue = Loading)"
+    },
+    {
+      "id": 131,
+      "categoryId": 2,
+      "description": "Что такое оператор callbackFlow для работы с callback API?",
+      "answer": "Оператор callbackFlow создает flow из callback-based API. Пример: fun watchLocation(): Flow<Location> = callbackFlow { val callback = { location: Location -> trySend(location) } }"
+    },
+    {
+      "id": 132,
+      "categoryId": 2,
+      "description": "Как использовать оператор channelFlow для сложных producer?",
+      "answer": "Оператор channelFlow создает flow с Channel under the hood. Пример: fun mergeSources(): Flow<Data> = channelFlow { launch { source1.collect { send(it) } } }"
+    },
+    {
+      "id": 133,
+      "categoryId": 2,
+      "description": "Что такое оператор produceIn для преобразования в Channel?",
+      "answer": "Оператор produceIn преобразует flow в ReceiveChannel. Пример: val channel = numbersFlow.produceIn(scope)"
+    },
+    {
+      "id": 134,
+      "categoryId": 2,
+      "description": "Как использовать оператор receiveAsFlow с Channel?",
+      "answer": "Оператор receiveAsFlow преобразует ReceiveChannel в Flow. Пример: val flow = channel.receiveAsFlow()"
+    },
+    {
+      "id": 135,
+      "categoryId": 2,
+      "description": "Что такое оператор flatMapLatest для отмены предыдущих запросов?",
+      "answer": "Оператор flatMapLatest преобразует каждый элемент в новый flow и cancels предыдущий flow. Пример: searchQueryFlow.flatMapLatest { query -> performSearch(query) }"
+    },
+    {
+      "id": 136,
+      "categoryId": 2,
+      "description": "Как использовать оператор sample для throttling?",
+      "answer": "Оператор sample emits только последний элемент в течение period времени. Пример: clickEvents.sample(1000)"
+    },
+    {
+      "id": 137,
+      "categoryId": 2,
+      "description": "Что такое оператор windowed для группировки элементов?",
+      "answer": "Оператор windowed группирует элементы в windows заданного размера. Пример: numbersFlow.windowed(3, step = 1)"
+    },
+    {
+      "id": 138,
+      "categoryId": 2,
+      "description": "Как использовать оператор zipWithNext для пар элементов?",
+      "answer": "Оператор zipWithNext создает пары из каждого элемента со следующим элементом. Пример: readingsFlow.zipWithNext()"
+    },
+    {
+      "id": 139,
+      "categoryId": 2,
+      "description": "Что такое оператор runningFold с явным начальным значением?",
+      "answer": "Оператор runningFold похож на scan но с explicit initial value. Пример: numbersFlow.runningFold(0) { acc, value -> acc + value }"
+    },
+    {
+      "id": 140,
+      "categoryId": 2,
+      "description": "Как использовать оператор distinctUntilChanged с custom comparer?",
+      "answer": "Оператор distinctUntilChanged может принимать custom comparer функцию. Пример: objectsFlow.distinctUntilChanged { old, new -> old.id == new.id }"
+    },
+    {
+      "id": 141,
+      "categoryId": 2,
+      "description": "Что такое оператор merge для объединения Flow?",
+      "answer": "Оператор merge объединяет multiple flows в один. Пример: merge(flow1, flow2, flow3)"
+    },
+    {
+      "id": 142,
+      "categoryId": 2,
+      "description": "Как использовать оператор takeWhile для условного взятия элементов?",
+      "answer": "Оператор takeWhile takes элементы пока predicate true. Пример: numbersFlow.takeWhile { it < 10 }"
+    },
+    {
+      "id": 143,
+      "categoryId": 2,
+      "description": "Что такое оператор dropWhile для пропуска элементов по условию?",
+      "answer": "Оператор dropWhile drops элементы пока predicate true. Пример: numbersFlow.dropWhile { it < 5 }"
+    },
+    {
+      "id": 144,
+      "categoryId": 2,
+      "description": "Как использовать оператор filterIndexed для фильтрации по индексу?",
+      "answer": "Оператор filterIndexed фильтрует элементы based on both value и index. Пример: itemsFlow.filterIndexed { index, item -> index % 2 == 0 }"
+    },
+    {
+      "id": 145,
+      "categoryId": 2,
+      "description": "Что такое оператор mapIndexed для преобразования с индексом?",
+      "answer": "Оператор mapIndexed преобразует элементы используя both value и index. Пример: itemsFlow.mapIndexed { index, item -> ItemWithIndex(index, item) }"
+    },
+    {
+      "id": 146,
+      "categoryId": 2,
+      "description": "Как использовать оператор onSubscription в SharedFlow?",
+      "answer": "Оператор onSubscription выполняет действие когда collector subscribes к SharedFlow. Доступен только для SharedFlow."
+    },
+    {
+      "id": 147,
+      "categoryId": 2,
+      "description": "Как использовать оператор launchIn для запуска collection?",
+      "answer": "Оператор launchIn запускает collection flow в указанном scope. Пример: flow.onEach { updateUI(it) }.launchIn(viewModelScope)"
+    },
+    {
+      "id": 148,
+      "categoryId": 2,
+      "description": "Как комбинировать операторы catch и retry для обработки ошибок?",
+      "answer": "Оператор catch можно комбинировать с retry для complex error handling. Пример: flow.retry(2).catch { e -> emitFallbackValue() }"
+    },
+    {
+      "id": 149,
+      "categoryId": 2,
+      "description": "Как использовать корутины и Flow в Android ViewModel?",
+      "answer": "В ViewModel использовать viewModelScope для запуска корутин. Для Flow использовать stateIn для преобразования в StateFlow. Пример: val uiState = dataFlow.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), initialValue)"
+    },
+    {
+      "id": 150,
+      "categoryId": 2,
+      "description": "Что такое оператор debounce и как он помогает оптимизировать запросы?",
+      "answer": "Оператор debounce помогает избежать избыточных запросов при частых изменениях входных данных, emitting только последнее значение после периода бездействия. Пример: searchFlow.debounce(300).collect { performSearch(it) }"
+    }
+  ]
+}
+  
