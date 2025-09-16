@@ -301,8 +301,6 @@
       "answer": "Включить debug mode: -Dkotlinx.coroutines.debug. Использовать CoroutineName для именования корутин. В IDE: breakpoints с suspend functions support. Логирование с coroutineId."
     },
     {
-  "questions": [
-    {
       "id": 51,
       "categoryId": 2,
       "description": "Что такое оператор debounce в Flow и когда его использовать?",
@@ -602,8 +600,6 @@
       "description": "Как использовать корутины и Flow в Android ViewModel?",
       "answer": "В ViewModel использовать viewModelScope для запуска корутин. Для Flow: использовать stateIn для преобразования в StateFlow и наблюдать в UI через collectAsState. Пример: val uiState = dataFlow.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), initialValue)"
     },
-    {
-  "questions": [
     {
       "id": 101,
       "categoryId": 2,
