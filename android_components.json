@@ -1,1 +1,904 @@
-
+{
+  "questions": [
+    {
+      "id": 1,
+      "categoryId": 3,
+      "description": "Что такое Activity в Android и какой у нее жизненный цикл?",
+      "answer": "Activity - основной компонент UI, представляющий один экран с пользовательским интерфейсом. Жизненный цикл: onCreate() (создание), onStart() (становится видимым), onResume() (взаимодействие с пользователем), onPause() (частично перекрыто), onStop() (полностью невидимо), onDestroy() (уничтожение). Важно правильно управлять ресурсами в каждом методе."
+    },
+    {
+      "id": 2,
+      "categoryId": 3,
+      "description": "Что такое Fragment и чем он отличается от Activity?",
+      "answer": "Fragment - модульная часть UI, которая может быть многократно использована в разных Activity. В отличие от Activity, Fragment не является точкой входа в приложение и должен быть размещен внутри Activity. Fragment имеет собственный жизненный цикл, но зависит от жизненного цикла родительской Activity."
+    },
+    {
+      "id": 3,
+      "categoryId": 3,
+      "description": "Что такое Service в Android и какие типы Services существуют?",
+      "answer": "Service - компонент для выполнения длительных операций в фоне без пользовательского интерфейса. Типы: Started Service (запускается startService(), работает пока не остановится), Bound Service (привязывается через bindService(), работает пока есть connected clients). IntentService устарел, рекомендуется использовать WorkManager."
+    },
+    {
+      "id": 4,
+      "categoryId": 3,
+      "description": "Что такое BroadcastReceiver и для чего он используется?",
+      "answer": "BroadcastReceiver - компонент для обработки system-wide broadcast сообщений и custom intent'ов. Может быть зарегистрирован статически (в manifest) или динамически (в коде). Используется для реагирования на системные события: boot completed, battery low, network connectivity changes."
+    },
+    {
+      "id": 5,
+      "categoryId": 3,
+      "description": "Что такое ContentProvider и когда его использовать?",
+      "answer": "ContentProvider - компонент для управления доступом к структурированным данным между приложениями. Предоставляет URI-based интерфейс для CRUD операций. Используется для sharing данных, работы с Contacts, Calendar, MediaStore, и кастомными данными."
+    },
+    {
+      "id": 6,
+      "categoryId": 3,
+      "description": "Что такое Intent и какие виды Intent существуют?",
+      "answer": "Intent - объект-сообщение для выполнения операций: запуск Activity, Service, Broadcast. Виды: Explicit Intent (явно указывает компонент), Implicit Intent (описывает действие, система находит подходящий компонент). Содержит action, data, category, extras."
+    },
+    {
+      "id": 7,
+      "categoryId": 3,
+      "description": "Что такое View и ViewGroup в Android?",
+      "answer": "View - базовый элемент UI (Button, TextView, ImageView). ViewGroup - контейнер для других View (LinearLayout, ConstraintLayout, FrameLayout). ViewGroup наследуется от View и может содержать дочерние View, формируя иерархию элементов интерфейса."
+    },
+    {
+      "id": 8,
+      "categoryId": 3,
+      "description": "Что такое RecyclerView и как он работает?",
+      "answer": "RecyclerView - продвинутый и гибкий виджет для отображения больших наборов данных. Использует ViewHolder pattern для переиспользования View и улучшения производительности. Состоит из: Adapter (связывает данные с View), ViewHolder (хранит ссылки на View), LayoutManager (управляет расположением элементов)."
+    },
+    {
+      "id": 9,
+      "categoryId": 3,
+      "description": "Что такое LayoutManager в RecyclerView?",
+      "answer": "LayoutManager - компонент RecyclerView, отвечающий за расположение элементов. Стандартные реализации: LinearLayoutManager (линейный список), GridLayoutManager (сетка), StaggeredGridLayoutManager (ступенчатая сетка). Можно создавать кастомные LayoutManager для специальных layouts."
+    },
+    {
+      "id": 10,
+      "categoryId": 3,
+      "description": "Что такое Adapter в RecyclerView?",
+      "answer": "Adapter - мост между RecyclerView и набором данных. Отвечает за создание ViewHolder'ов, привязку данных к View, и определение количества элементов. Основные методы: onCreateViewHolder(), onBindViewHolder(), getItemCount()."
+    },
+    {
+      "id": 11,
+      "categoryId": 3,
+      "description": "Что такое ViewHolder в RecyclerView?",
+      "answer": "ViewHolder - объект, который хранит ссылки на View элемента списка. Уменьшает количество вызовов findViewById() и улучшает производительность. Каждый ViewHolder соответствует одной позиции в данных и переиспользуется для разных позиций."
+    },
+    {
+      "id": 12,
+      "categoryId": 3,
+      "description": "Что такое ConstraintLayout и его преимущества?",
+      "answer": "ConstraintLayout - гибкий layout manager, позволяющий создавать complex layouts с flat view hierarchy. Использует constraints для позиционирования views относительно друг друга и parent. Преимущества: улучшенная производительность, мощные возможности позиционирования, поддержка в Visual Editor."
+    },
+    {
+      "id": 13,
+      "categoryId": 3,
+      "description": "Что такое MotionLayout и для чего он используется?",
+      "answer": "MotionLayout - подкласс ConstraintLayout для анимаций и переходов между разными состояниями UI. Описывает анимации через XML (MotionScene). Поддерживает touch-driven motions, keyframes, custom attributes. Идеален для complex animations."
+    },
+    {
+      "id": 14,
+      "categoryId": 3,
+      "description": "Что такое SharedPreferences и когда его использовать?",
+      "answer": "SharedPreferences - легковесное хранилище для примитивных данных (key-value pairs). Используется для сохранения простых настроек, пользовательских предпочтений, состояния UI. Не подходит для больших объемов данных или сложных структур."
+    },
+    {
+      "id": 15,
+      "categoryId": 3,
+      "description": "Что такое Room Persistence Library?",
+      "answer": "Room - библиотека persistence, предоставляющая абстракционный слой над SQLite. Состоит из: Entity (классы данных), DAO (Data Access Object - интерфейс для доступа к данным), Database (абстракция базы данных). Обеспечивает проверку SQL запросов во время компиляции."
+    },
+    {
+      "id": 16,
+      "categoryId": 3,
+      "description": "Что такое Entity в Room?",
+      "answer": "Entity - класс, представляющий таблицу в базе данных. Аннотируется @Entity, содержит поля-колонки. Может иметь первичный ключ (@PrimaryKey), индексы (@Index), отношения с другими Entity. Пример: @Entity data class User(@PrimaryKey val id: Int, val name: String)"
+    },
+    {
+      "id": 17,
+      "categoryId": 3,
+      "description": "Что такое DAO в Room?",
+      "answer": "DAO (Data Access Object) - интерфейс или абстрактный класс, содержащий методы для доступа к данным. Аннотируется @Dao. Методы аннотируются @Query, @Insert, @Update, @Delete. Room генерирует реализацию во время компиляции."
+    },
+    {
+      "id": 18,
+      "categoryId": 3,
+      "description": "Что такое WorkManager и для чего он используется?",
+      "answer": "WorkManager - API для schedule отложенных асинхронных задач, которые должны быть выполнены обязательно. Учитывает возможности устройства и версию Android, выбирая подходящий способ выполнения. Поддерживает constraints (сеть, зарядка, storage)."
+    },
+    {
+      "id": 19,
+      "categoryId": 3,
+      "description": "Что такое ViewModel и какие проблемы он решает?",
+      "answer": "ViewModel - класс для хранения и управления UI-данными с учетом lifecycle. Решает проблемы: сохраняет данные при изменениях конфигурации (поворот экрана), отделяет UI логику от View, предотвращает утечки памяти (не содержит ссылок на View)."
+    },
+    {
+      "id": 20,
+      "categoryId": 3,
+      "description": "Что такое LiveData и как она работает?",
+      "answer": "LiveData - observable data holder класс, который следует паттерну observer. Автоматически уведомляет активных наблюдателей при изменении данных. Учитывает lifecycle компонентов - только активные observers получают обновления, предотвращает утечки памяти."
+    },
+    {
+      "id": 21,
+      "categoryId": 3,
+      "description": "Что такое Data Binding и какие у него преимущества?",
+      "answer": "Data Binding - библиотека, позволяющая связывать компоненты UI в layout файлах с источниками данных в приложении используя declarative format. Преимущества: уменьшает boilerplate код (findViewById, setOnClickListener), улучшает читаемость, обеспечивает реактивное обновление UI."
+    },
+    {
+      "id": 22,
+      "categoryId": 3,
+      "description": "Что такое View Binding и чем отличается от Data Binding?",
+      "answer": "View Binding - генерация классов для безопасного доступа к view. Отличается от Data Binding: проще в настройке, не требует annotation processing, только доступ к view (без выражений и observable данных). Data Binding мощнее но сложнее."
+    },
+    {
+      "id": 23,
+      "categoryId": 3,
+      "description": "Что такое Navigation Component?",
+      "answer": "Navigation Component - библиотека для управления навигацией между фрагментами. Состоит из: NavGraph (граф навигации), NavController (управляет навигацией), NavHost (контейнер для фрагментов). Упрощает передачу данных, анимации переходов, глубокие ссылки."
+    },
+    {
+      "id": 24,
+      "categoryId": 3,
+      "description": "Что такое Paging Library и для чего она используется?",
+      "answer": "Paging Library - загрузка данных постранично. Поддерживает разные источники (сеть, БД). Предоставляет PagingData, Pager, PagingSource. Интегрируется с RecyclerView и Coroutines/Flow. Оптимизирует использование памяти и пропускную способность сети."
+    },
+    {
+      "id": 25,
+      "categoryId": 3,
+      "description": "Что такое Dependency Injection в Android?",
+      "answer": "Dependency Injection (DI) - техника, при которой объекты получают свои зависимости извне, вместо их создания внутри. В Android популярны Dagger/Hilt и Koin. Преимущества: упрощение тестирования, уменьшение связанности, централизованное управление зависимостями."
+    },
+    {
+      "id": 26,
+      "categoryId": 3,
+      "description": "Что такое Hilt и чем он отличается от Dagger?",
+      "answer": "Hilt - упрощенная версия Dagger для Android, построенная на основе Dagger. Отличается: автоматическая генерация компонентов для Android классов, меньше boilerplate кода, стандартные bindings для Android framework classes. Рекомендуется для новых проектов."
+    },
+    {
+      "id": 27,
+      "categoryId": 3,
+      "description": "Что такое Material Design и его основные принципы?",
+      "answer": "Material Design - дизайн система от Google. Основные принципы: material metaphor (цифровой материал), bold design (смелый дизайн), motion provides meaning (анимация передает смысл). Включает guidelines для typography, color, shapes, icons, motion."
+    },
+    {
+      "id": 28,
+      "categoryId": 3,
+      "description": "Что такое Android Jetpack?",
+      "answer": "Jetpack - набор библиотек, tools, и architectural guidance для ускорения разработки Android приложений. Включает: Architecture Components (ViewModel, Room), UI (Compose, Fragment), Behavior (Permissions, Media), Foundation (AppCompat, KTX)."
+    },
+    {
+      "id": 29,
+      "categoryId": 3,
+      "description": "Что такое Jetpack Compose?",
+      "answer": "Jetpack Compose - modern declarative UI toolkit для Android. Вместо XML layouts использует Kotlin функции (composable functions). Преимущества: меньше кода, мощные возможности, type safety, упрощенная работа с state. Работает с ViewModel и Coroutines."
+    },
+    {
+      "id": 30,
+      "categoryId": 3,
+      "description": "Что такое Composable функции в Jetpack Compose?",
+      "answer": "Composable функции - функции Kotlin с аннотацией @Composable, которые описывают UI. Могут принимать параметры, иметь состояние, и вызывать другие composable функции. Компилятор преобразует их в UI tree. Пример: @Composable fun Greeting(name: String) { Text(text = \"Hello $name\") }"
+    },
+    {
+      "id": 31,
+      "categoryId": 3,
+      "description": "Что такое State в Jetpack Compose?",
+      "answer": "State в Compose - данные которые могут меняться и вызывать recomposition UI. Создается через mutableStateOf(), remember. При изменении state автоматически вызывается recomposition affected composables. Пример: var count by remember { mutableStateOf(0) }"
+    },
+    {
+      "id": 32,
+      "categoryId": 3,
+      "description": "Что такое Modifier в Jetpack Compose?",
+      "answer": "Modifier - объект для настройки внешнего вида и поведения composable элементов. Цепочка методов: размер, отступы, фон, обработка событий. Пример: Text(\"Hello\", modifier = Modifier.padding(16.dp).background(Color.Blue))"
+    },
+    {
+      "id": 33,
+      "categoryId": 3,
+      "description": "Что такое Lifecycle в Android и зачем он нужен?",
+      "answer": "Lifecycle - представляет состояние lifecycle компонента (Activity, Fragment). Позволяет другим объектам следить за изменениями состояния и соответствующим образом управлять ресурсами. Предотвращает утечки памяти и crashes."
+    },
+    {
+      "id": 34,
+      "categoryId": 3,
+      "description": "Что такое Context в Android и какие типы Context существуют?",
+      "answer": "Context - интерфейс к глобальной информации о environment приложения. Типы: Activity Context (связан с lifecycle Activity), Application Context (живет пока живет приложение). Важно использовать правильный Context чтобы избежать утечек памяти."
+    },
+    {
+      "id": 35,
+      "categoryId": 3,
+      "description": "Что такое Resources в Android?",
+      "answer": "Resources - внешние элементы приложения: strings, layouts, drawables, dimensions, colors, styles. Хранятся в папках res/. Доступ через R класс. Поддерживают квалификаторы для разных конфигураций (язык, размер экрана, ориентация)."
+    },
+    {
+      "id": 36,
+      "categoryId": 3,
+      "description": "Что такое Manifest файл в Android?",
+      "answer": "AndroidManifest.xml - файл с essential информацией о приложении для Android системы. Содержит: package name, components (activities, services, receivers), permissions, minimum API level, hardware/software features, intent filters."
+    },
+    {
+      "id": 37,
+      "categoryId": 3,
+      "description": "Что такое Gradle в Android проекте?",
+      "answer": "Gradle - система сборки для Android проектов. Файлы: build.gradle (project level) и build.gradle (module level). Управляет зависимостями, настройками сборки, flavors, build types. Поддерживает Kotlin DSL (build.gradle.kts)."
+    },
+    {
+      "id": 38,
+      "categoryId": 3,
+      "description": "Что такое Android App Bundle (AAB)?",
+      "answer": "AAB - формат публикации приложений вместо APK. Позволяет Google Play генерировать оптимизированные APK для разных устройств (по архитектуре, языку, density). Уменьшает размер загружаемого приложения для пользователей."
+    },
+    {
+      "id": 39,
+      "categoryId": 3,
+      "description": "Что такое Dynamic Feature Modules?",
+      "answer": "Динамические feature модули - возможность загрузки частей приложения по требованию. Уменьшают初始 размер приложения. Поддерживают conditional delivery (по устройству, стране) и on-demand delivery. Интегрируются с Play Core Library."
+    },
+    {
+      "id": 40,
+      "categoryId": 3,
+      "description": "Что такое ProGuard и R8?",
+      "answer": "ProGuard и R8 - инструменты для обфускации, минификации и оптимизации кода. R8 - более современная замена ProGuard от Google. Удаляют неиспользуемый код, переименовывают классы/методы, оптимизируют байткод для уменьшения размера APK."
+    },
+    {
+      "id": 41,
+      "categoryId": 3,
+      "description": "Что такое Android Keystore System?",
+      "answer": "Android Keystore System - безопасное хранилище для криптографических ключей. Защищает ключи от извлечения, использует hardware-backed security когда доступно. Используется для хранения encryption keys, SSL certificates, authentication tokens."
+    },
+    {
+      "id": 42,
+      "categoryId": 3,
+      "description": "Что такое Deep Links в Android?",
+      "answer": "Deep Links - ссылки которые открывают specific content в приложении. Типы: Deep Links (открывают конкретный экран), App Links (HTTP URLs которые открывают приложение, требуют digital asset links verification). Настраиваются через intent filters в manifest."
+    },
+    {
+      "id": 43,
+      "categoryId": 3,
+      "description": "Что такое Notification в Android?",
+      "answer": "Notification - сообщение которое отображается outside UI приложения. Создаются через NotificationManager. Могут содержать: title, text, icon, actions, expanded layout. Каналы уведомлений (Notification Channels) требуются для Android 8.0+."
+    },
+    {
+      "id": 44,
+      "categoryId": 3,
+      "description": "Что такое JobScheduler и когда его использовать?",
+      "answer": "JobScheduler - API для планирования фоновых работ с учетом условий устройства (сеть, зарядка, idle состояние). Оптимизирует battery usage. Для версий ниже Android 5.0 использовать Firebase JobDispatcher или WorkManager (backward compatible)."
+    },
+    {
+      "id": 45,
+      "categoryId": 3,
+      "description": "Что такое Handler и Looper в Android?",
+      "answer": "Handler - для отправки и обработки Message и Runnable в определенном потоке. Looper - управляет message queue в потоке. Главный поток имеет Looper по умолчанию. Для фоновых потоков нужно создавать Looper.prepare() и Looper.loop()."
+    },
+    {
+      "id": 46,
+      "categoryId": 3,
+      "description": "Что такое AsyncTask и почему он устарел?",
+      "answer": "AsyncTask - класс для выполнения фоновых операций и обновления UI. Устарел из-за: memory leaks (удержание ссылок на Activity), сложность отмены задач, плохая обработка изменений конфигурации. Рекомендуется использовать корутины или Executors."
+    },
+    {
+      "id": 47,
+      "categoryId": 3,
+      "description": "Что такое StrictMode и для чего он используется?",
+      "answer": "StrictMode - инструмент для обнаружения проблем производительности и безопасности во время разработки. Обнаруживает: disk I/O и network operations на главном потоке, утечки Activity, неправильное использование URI permissions. Включается только в debug builds."
+    },
+    {
+      "id": 48,
+      "categoryId": 3,
+      "description": "Что такое ANR (Application Not Responding)?",
+      "answer": "ANR - когда главный поток блокирован более 5 секунд (для BroadcastReceiver - 10 секунд). Причины: network operations, complex calculations, disk I/O на главном потоке. Решение: выносить тяжелые операции в фоновые потоки."
+    },
+    {
+      "id": 49,
+      "categoryId": 3,
+      "description": "Что такое Memory Leaks в Android и как их избежать?",
+      "answer": "Memory Leaks - когда объекты удерживаются в памяти после того как они больше не нужны. Common causes: статические ссылки на View/Activity, немаркированные Handler'ы, неотписанные подписки, inner classes. Обнаружение: Memory Profiler, LeakCanary."
+    },
+    {
+      "id": 50,
+      "categoryId": 3,
+      "description": "Что такое Firebase и какие сервисы он предоставляет?",
+      "answer": "Firebase - платформа от Google для мобильной разработки. Основные сервисы: Analytics (аналитика), Crashlytics (отчеты об ошибках), Cloud Messaging (push-уведомления), Remote Config (удаленная конфигурация), Authentication (аутентификация), Firestore (база данных)."
+    },
+    {
+      "id": 51,
+      "categoryId": 3,
+      "description": "Что такое ContentResolver и для чего он используется?",
+      "answer": "ContentResolver - клиентский объект для взаимодействия с ContentProvider. Обеспечивает единый интерфейс для выполнения CRUD операций с данными через URI. Используется для доступа к системным провайдерам (контакты, календарь) и кастомным провайдерам данных."
+    },
+    {
+      "id": 52,
+      "categoryId": 3,
+      "description": "Что такое Loader и почему он устарел?",
+      "answer": "Loader - компонент для асинхронной загрузки данных в Activity/Fragment с учетом жизненного цикла. Устарел в пользу LiveData и корутин из-за сложности API, ограниченной функциональности и лучших альтернатив в современных архитектурных компонентах."
+    },
+    {
+      "id": 53,
+      "categoryId": 3,
+      "description": "Что такое WindowManager в Android?",
+      "answer": "WindowManager - системный сервис для управления окнами приложения. Позволяет создавать overlay windows, управлять параметрами отображения, добавлять View поверх других приложений (требует специальных разрешений). Используется для создания floating windows и кастомных overlay."
+    },
+    {
+      "id": 54,
+      "categoryId": 3,
+      "description": "Что такое SurfaceView и когда его использовать?",
+      "answer": "SurfaceView - специальный View для отрисовки графики в отдельном потоке. Имеет собственный Surface для рисования. Используется для: видео playback, игр, камеры, real-time графики. Отличается от TextureView поддержкой hardware acceleration и отдельным слоем композиции."
+    },
+    {
+      "id": 55,
+      "categoryId": 3,
+      "description": "Что такое TextureView и чем отличается от SurfaceView?",
+      "answer": "TextureView - View для отрисовки hardware accelerated content с поддержкой трансформаций. В отличие от SurfaceView, интегрируется в обычную view hierarchy и поддерживает анимации, но может иметь меньшую производительность для video playback."
+    },
+    {
+      "id": 56,
+      "categoryId": 3,
+      "description": "Что такое InputMethodManager и для чего он используется?",
+      "answer": "InputMethodManager - системный сервис для управления виртуальной клавиатурой. Позволяет программно показывать/скрывать клавиатуру, управлять вводом, получать информацию о текущем методе ввода. Используется для кастомных обработчиков ввода."
+    },
+    {
+      "id": 57,
+      "categoryId": 3,
+      "description": "Что такое AccessibilityService в Android?",
+      "answer": "AccessibilityService - сервис для обеспечения доступности приложения для пользователей с ограниченными возможностями. Может перехватывать события, получать информацию об интерфейсе, выполнять действия. Требует разрешения пользователя и специальной настройки."
+    },
+    {
+      "id": 58,
+      "categoryId": 3,
+      "description": "Что такое MediaPlayer и AudioManager?",
+      "answer": "MediaPlayer - класс для воспроизведения аудио и видео из различных источников. AudioManager - сервис для управления аудио режимами, громкостью, аудио фокусом. Используются вместе для создания медиа приложений с правильным управлением аудио ресурсами."
+    },
+    {
+      "id": 59,
+      "categoryId": 3,
+      "description": "Что такое CameraX и его преимущества?",
+      "answer": "CameraX - Jetpack библиотека для упрощения работы с камерой. Преимущества: lifecycle-aware, consistent behavior across devices, easy-to-use API, автоматическое разрешение compatibility issues. Состоит из Use Cases: preview, image analysis, image capture."
+    },
+    {
+      "id": 60,
+      "categoryId": 3,
+      "description": "Что такое BiometricPrompt и для чего он используется?",
+      "answer": "BiometricPrompt - стандартизированный API для биометрической аутентификации. Поддерживает отпечатки пальцев, распознавание лица, радужную оболочку. Обеспечивает consistent UX across devices, обратную совместимость и безопасное хранение cryptographic keys."
+    },
+    {
+      "id": 61,
+      "categoryId": 3,
+      "description": "Что такое WorkManager и какие типы работ поддерживает?",
+      "answer": "WorkManager поддерживает: OneTimeWorkRequest (однократная задача), PeriodicWorkRequest (периодическая задача), WorkRequest с constraints (условия выполнения). Гарантирует выполнение работы даже после перезагрузки устройства, выбирая оптимальный способ выполнения."
+    },
+    {
+      "id": 62,
+      "categoryId": 3,
+      "description": "Что такое PagingData и PagingSource в Paging 3?",
+      "answer": "PagingData - контейнер для постраничных данных, который может быть преобразован в Flow. PagingSource - базовый класс для источников данных, определяет как загружать данные по страницам. Вместе обеспечивают эффективную загрузку и кэширование данных."
+    },
+    {
+      "id": 63,
+      "categoryId": 3,
+      "description": "Что такое RemoteViews и для чего используются?",
+      "answer": "RemoteViews - специальный объект для описания UI который может отображаться в другом процессе. Используются для: виджетов на домашнем экране, уведомлений с кастомным layout. Имеют ограниченный набор поддерживаемых View и атрибутов."
+    },
+    {
+      "id": 64,
+      "categoryId": 3,
+      "description": "Что такое AppWidgetProvider?",
+      "answer": "AppWidgetProvider - BroadcastReceiver для создания виджетов на домашнем экране. Обрабатывает события: обновление, включение/выключение, изменение размера. Использует RemoteViews для описания интерфейса и работает в связке с AppWidgetManager."
+    },
+    {
+      "id": 65,
+      "categoryId": 3,
+      "description": "Что такое JobIntentService и почему он устарел?",
+      "answer": "JobIntentService - сервис для выполнения фоновых задач, который автоматически использует JobScheduler на Android 8.0+ и IntentService на старых версиях. Устарел в пользу WorkManager, который предоставляет более гибкие возможности и лучшую интеграцию с современными архитектурными компонентами."
+    },
+    {
+      "id": 66,
+      "categoryId": 3,
+      "description": "Что такое NavController в Navigation Component?",
+      "answer": "NavController - центральный класс для управления навигацией между destination'ами. Обеспечивает: переходы между фрагментами, передачу аргументов, управление back stack, глубокие ссылки, анимации переходов. Связывается с NavHostFragment."
+    },
+    {
+      "id": 67,
+      "categoryId": 3,
+      "description": "Что такое NavGraph в Navigation Component?",
+      "answer": "NavGraph - граф навигации, определяющий все возможные пути в приложении. Содержит: destinations (фрагменты, активности), actions (переходы), arguments (параметры). Создается через Navigation Editor или XML и связывает все точки навигации."
+    },
+    {
+      "id": 68,
+      "categoryId": 3,
+      "description": "Что такое Deep Link в Navigation Component?",
+      "answer": "Deep Link в Navigation Component - URI который открывает specific destination в графе навигации. Может быть: implicit (через intent filter), explicit (программно). Поддерживает параметры в URI и автоматическое создание pending intent для уведомлений."
+    },
+    {
+      "id": 69,
+      "categoryId": 3,
+      "description": "Что такое DataStore и чем отличается от SharedPreferences?",
+      "answer": "DataStore - современная замена SharedPreferences для хранения key-value пар или typed objects. Преимущества: асинхронный API (корутины), обработка ошибок, type safety, миграция из SharedPreferences. Бывает Preferences DataStore и Proto DataStore."
+    },
+    {
+      "id": 70,
+      "categoryId": 3,
+      "description": "Что такое Hilt Modules и какие типы бывают?",
+      "answer": "Hilt Modules - классы которые предоставляют зависимости для DI. Типы: @Module (общие зависимости), @InstallIn (определяет scope), @Binds (для интерфейсов), @Provides (для создания объектов). Могут быть: Application-level, Activity-level, Fragment-level, ViewModel-level."
+    },
+    {
+      "id": 71,
+      "categoryId": 3,
+      "description": "Что такое @AndroidEntryPoint в Hilt?",
+      "answer": "@AndroidEntryPoint - аннотация для Android классов (Activity, Fragment, Service, View, BroadcastReceiver) которые должны получать зависимости через Hilt. Автоматически генерирует компоненты и обеспечивает injection в onCreate() или конструктор."
+    },
+    {
+      "id": 72,
+      "categoryId": 3,
+      "description": "Что такое @HiltViewModel и как используется?",
+      "answer": "@HiltViewModel - аннотация для ViewModel которые получают зависимости через Hilt. Позволяет инжектить зависимости в конструктор ViewModel. Автоматически создает ViewModelProvider.Factory и связывает с lifecycle через @ViewModelInject."
+    },
+    {
+      "id": 73,
+      "categoryId": 3,
+      "description": "Что такое MotionScene в MotionLayout?",
+      "answer": "MotionScene - XML файл описывающий анимации и переходы между состояниями MotionLayout. Содержит: ConstraintSets (разные состояния layout), Transitions (анимации между состояниями), KeyFrameSet (кастомные точки анимации). Отделен от layout файла."
+    },
+    {
+      "id": 74,
+      "categoryId": 3,
+      "description": "Что такое Transition в MotionLayout?",
+      "answer": "Transition - описание анимации между двумя ConstraintSet'ами в MotionLayout. Определяет: duration, interpolator, trigger (onClick, onSwipe), path motion. Может содержать KeyFrame для кастомных изменений во время анимации."
+    },
+    {
+      "id": 75,
+      "categoryId": 3,
+      "description": "Что такое ConstraintSet в MotionLayout?",
+      "answer": "ConstraintSet - набор constraints определяющий положение и свойства View в определенном состоянии MotionLayout. Каждый Transition связывает два ConstraintSet'а (start и end). View могут иметь разные размеры, позиции, видимость в разных ConstraintSet'ах."
+    },
+    {
+      "id": 76,
+      "categoryId": 3,
+      "description": "Что такое Material Theming и как его использовать?",
+      "answer": "Material Theming - система кастомизации Material Design под бренд приложения. Включает: color (primary, secondary, surface), typography (шрифты, размеры), shape (углы, формы). Настраивается через themes.xml и стилей, применяется автоматически к Material компонентам."
+    },
+    {
+      "id": 77,
+      "categoryId": 3,
+      "description": "Что такое Dark Theme в Android?",
+      "answer": "Dark Theme - темная тема интерфейса которая уменьшает нагрузку на глаза и экономит заряд батареи на OLED экранах. Реализуется через: night-qualified resources, Material Design цветовую палитру, автоматическое переключение по системным настройкам."
+    },
+    {
+      "id": 78,
+      "categoryId": 3,
+      "description": "Что такое Splash Screen API в Android 12+?",
+      "answer": "Splash Screen API - стандартизированный способ отображения загрузочного экрана. Состоит из: иконки, background color, анимации. Автоматически управляет временем показа, обеспечивает consistent UX across apps. Настраивается через themes.xml."
+    },
+    {
+      "id": 79,
+      "categoryId": 3,
+      "description": "Что такое Predictive Back Gesture в Android?",
+      "answer": "Predictive Back Gesture - функция которая показывает preview следующего экрана при начале жеста назад. Требует: миграцию на Navigation Component, обработку back events через OnBackPressedCallback, кастомные анимации для предсказуемого поведения."
+    },
+    {
+      "id": 80,
+      "categoryId": 3,
+      "description": "Что такое App Shortcuts и какие типы бывают?",
+      "answer": "App Shortcuts - быстрые действия которые появляются при долгом нажатии на иконку приложения. Типы: static (определены в XML), dynamic (создаются программно), pinned (закреплены на домашнем экране). Ускоряют доступ к часто используемым функциям."
+    },
+    {
+      "id": 81,
+      "categoryId": 3,
+      "description": "Что такое Picture-in-Picture (PiP) режим?",
+      "answer": "Picture-in-Picture - режим когда видео воспроизводится в маленьком плавающем окне поверх других приложений. Требует: объявление в manifest, обработку lifecycle событий, управление размерами и действиями. Используется для видео плееров и звонков."
+    },
+    {
+      "id": 82,
+      "categoryId": 3,
+      "description": "Что такое Bubble в Android?",
+      "answer": "Bubble - плавающее окно которое отображается поверх других приложений и может быть свернуто в circular icon. Используется для: messaging apps, ongoing tasks. Требует разрешения пользователя и специальной реализации через Notification и BubbleMetadata."
+    },
+    {
+      "id": 83,
+      "categoryId": 3,
+      "description": "Что такое Scoped Storage в Android 10+?",
+      "answer": "Scoped Storage - система разрешений для доступа к файлам которая ограничивает приложения их собственным storage space. Предоставляет: MediaStore API для общих медиа файлов, Storage Access Framework для доступа к документам, специальные разрешения для широкого доступа."
+    },
+    {
+      "id": 84,
+      "categoryId": 3,
+      "description": "Что такое Location Services в Android?",
+      "answer": "Location Services - сервисы для получения информации о местоположении устройства. Включают: Fused Location Provider (комбинирует GPS, Wi-Fi, cellular), Geofencing (реагирование на вход/выход из зоны), Activity Recognition. Требуют разрешений и careful battery management."
+    },
+    {
+      "id": 85,
+      "categoryId": 3,
+      "description": "Что такое Doze Mode и App Standby?",
+      "answer": "Doze Mode - режим энергосбережения когда устройство не используется. App Standby - ограничение фоновой активности редко используемых приложений. Влияют на: network access, jobs, alarms, syncs. Требуют использования рекомендуемых API для корректной работы."
+    },
+    {
+      "id": 86,
+      "categoryId": 3,
+      "description": "Что такое Background Execution Limits в Android 8+?",
+      "answer": "Background Execution Limits - ограничения фоновой активности для сохранения батареи. Включают: ограничения на запуск services, broadcast receivers, обработку неявных broadcast'ов. Рекомендуется использовать WorkManager для фоновых задач."
+    },
+    {
+      "id": 87,
+      "categoryId": 3,
+      "description": "Что такое Foreground Service и когда его использовать?",
+      "answer": "Foreground Service - сервис который показывает persistent notification и имеет higher priority чем обычные фоновые сервисы. Используется для: воспроизведения музыки, записи аудио, отслеживания местоположения, файловых операций. Требует разрешения FOREGROUND_SERVICE."
+    },
+    {
+      "id": 88,
+      "categoryId": 3,
+      "description": "Что такое Bound Service и как он работает?",
+      "answer": "Bound Service - сервис который позволяет другим компонентам привязываться к нему и взаимодействовать через интерфейс. Может работать только пока есть connected clients. Реализуется через: Binder (внутрипроцессное взаимодействие), Messenger (межпроцессное)."
+    },
+    {
+      "id": 89,
+      "categoryId": 3,
+      "description": "Что такое AIDL (Android Interface Definition Language)?",
+      "answer": "AIDL - язык для определения интерфейсов для межпроцессного взаимодействия (IPC). Позволяет приложениям обмениваться данными и вызывать методы между процессами. Генерирует boilerplate код для marshalling/unmarshalling данных. Используется для сложных IPC сценариев."
+    },
+    {
+      "id": 90,
+      "categoryId": 3,
+      "description": "Что такое Parcelable и чем отличается от Serializable?",
+      "answer": "Parcelable - интерфейс для эффективной сериализации объектов в Android. В отличие от Serializable, требует ручной реализации но значительно быстрее и оптимизирован для Android. Используется для передачи объектов между компонентами через Intent/Bundle."
+    },
+    {
+      "id": 91,
+      "categoryId": 3,
+      "description": "Что такое Bundle и для чего он используется?",
+      "answer": "Bundle - коллекция key-value пар для передачи данных между Android компонентами. Поддерживает примитивные типы, Parcelable, Serializable объекты. Используется в: Intent extras, Fragment arguments, сохранении состояния, межпроцессной коммуникации."
+    },
+    {
+      "id": 92,
+      "categoryId": 3,
+      "description": "Что такое onSaveInstanceState() и когда вызывается?",
+      "answer": "onSaveInstanceState() - метод для сохранения временного состояния UI перед уничтожением Activity/Fragment (при повороте экрана, переходе в background). Восстанавливается в onCreate() или onRestoreInstanceState(). Не подходит для persistent данных."
+    },
+    {
+      "id": 93,
+      "categoryId": 3,
+      "description": "Что такое ViewModel и SavedStateHandle?",
+      "answer": "SavedStateHandle - wrapper вокруг Bundle который позволяет ViewModel сохранять и восстанавливать состояние через процесс death. Переживает configuration changes и process death. Используется для хранения UI состояния которое должно survive process death."
+    },
+    {
+      "id": 94,
+      "categoryId": 3,
+      "description": "Что такое Process Lifecycle в Android?",
+      "answer": "Process Lifecycle - состояния процесса приложения: foreground (видимое Activity), visible (частично видимое), service (работает сервис), background (не видимое), empty (не имеет активных компонентов). Система может убивать процессы по мере необходимости освобождения памяти."
+    },
+    {
+      "id": 95,
+      "categoryId": 3,
+      "description": "Что такое ART (Android Runtime) и Dalvik VM?",
+      "answer": "ART - среда выполнения которая заменила Dalvik VM в Android 5.0+. Особенности: AOT (Ahead-of-Time) компиляция, улучшенная производительность, оптимизация памяти, поддержка новых языковых функций. DalVM использовал JIT компиляцию и был менее эффективен."
+    },
+    {
+      "id": 96,
+      "categoryId": 3,
+      "description": "Что такое DEX файлы и Multidex в Android?",
+      "answer": "DEX (Dalvik Executable) - формат исполняемых файлов для Android. Multidex - механизм позволяющий приложению иметь multiple DEX файлов когда количество методов превышает 64K limit. Требует настройки в build.gradle и специальной загрузки secondary DEX файлов."
+    },
+    {
+      "id": 97,
+      "categoryId": 3,
+      "description": "Что такое Android App Links и как они работают?",
+      "answer": "Android App Links - HTTP URLs которые открывают контент в приложении без диалога выбора. Требуют: verification через Digital Asset Links JSON на сайте, intent filters в manifest, handling в Activity. Обеспечивают seamless переходы между web и app."
+    },
+    {
+      "id": 98,
+      "categoryId": 3,
+      "description": "Что такое Instant Apps в Android?",
+      "answer": "Instant Apps - возможность запускать приложения без установки. Пользователи могут опробовать функциональность приложения через URL. Требуют: modularization приложения, ограничение размера модулей, специальной конфигурации в Google Play Console."
+    },
+    {
+      "id": 99,
+      "categoryId": 3,
+      "description": "Что такое Dynamic Delivery в Android?",
+      "answer": "Dynamic Delivery - система доставки приложений через Google Play которая загружает только необходимые ресурсы для конкретного устройства. Включает: base APK, configuration APKs (для разных плотностей, языков, архитектур), dynamic feature modules."
+    },
+    {
+      "id": 100,
+      "categoryId": 3,
+      "description": "Что такое Android Testing и какие типы тестов существуют?",
+      "answer": "Android Testing включает: Unit Tests (тестирование логики без Android framework), Integration Tests (тестирование взаимодействия компонентов), UI Tests (тестирование пользовательского интерфейса). Инструменты: JUnit, Espresso, UI Automator, Robolectric, AndroidX Test."
+    },
+    {
+      "id": 101,
+      "categoryId": 3,
+      "description": "Что такое Espresso и для чего он используется?",
+      "answer": "Espresso - фреймворк для написания UI тестов в Android. Позволяет автоматизировать тестирование пользовательского интерфейса: клики, ввод текста, проверка отображения элементов. Основные компоненты: ViewMatchers (поиск элементов), ViewActions (действия), ViewAssertions (проверки). Требует синхронизации с главным потоком."
+    },
+    {
+      "id": 102,
+      "categoryId": 3,
+      "description": "Что такое Robolectric и чем он полезен?",
+      "answer": "Robolectric - фреймворк для запуска Android тестов на JVM без эмулятора или устройства. Позволяет быстро выполнять unit тесты которые зависят от Android framework. Поддерживает большинство Android API, ускоряет процесс тестирования и интеграцию с CI/CD."
+    },
+    {
+      "id": 103,
+      "categoryId": 3,
+      "description": "Что такое Mockito в Android тестировании?",
+      "answer": "Mockito - библиотека для создания mock объектов в тестах. Позволяет изолировать тестируемый код от зависимостей, создавая заглушки для классов и интерфейсов. Особенно полезен для тестирования ViewModel, Repository, и других компонентов с зависимостями."
+    },
+    {
+      "id": 104,
+      "categoryId": 3,
+      "description": "Что такое AndroidX Test и какие преимущества?",
+      "answer": "AndroidX Test - унифицированная библиотека для тестирования Android приложений. Преимущества: consistent API для unit и instrumentation тестов, поддержка Kotlin coroutines, улучшенная работа с Architecture Components, кроссплатформенные тестовые правила."
+    },
+    {
+      "id": 105,
+      "categoryId": 3,
+      "description": "Что такое CI/CD для Android разработки?",
+      "answer": "CI/CD (Continuous Integration/Continuous Deployment) - процесс автоматизации сборки, тестирования и распространения приложений. Для Android включает: автоматическую сборку APK/AAB, запуск тестов, статический анализ кода, деплой на тестовые серверы или Google Play. Популярные инструменты: GitHub Actions, GitLab CI, Jenkins, Bitrise."
+    },
+    {
+      "id": 106,
+      "categoryId": 3,
+      "description": "Что такое Lint в Android и для чего он используется?",
+      "answer": "Lint - статический анализатор кода для Android. Обнаруживает: потенциальные баги, проблемы производительности, security issues, violation of coding standards. Может быть настроен через lint.xml, поддерживает custom rules. Интегрируется в Android Studio и CI/CD pipelines."
+    },
+    {
+      "id": 107,
+      "categoryId": 3,
+      "description": "Что такое Android Profiler и какие инструменты включает?",
+      "answer": "Android Profiler - набор инструментов в Android Studio для анализа производительности приложения. Включает: CPU Profiler (анализ использования процессора), Memory Profiler (анализ памяти), Network Profiler (сетевые запросы), Energy Profiler (потребление энергии). Помогает оптимизировать производительность приложения."
+    },
+    {
+      "id": 108,
+      "categoryId": 3,
+      "description": "Что такое LeakCanary и как он помогает?",
+      "answer": "LeakCanary - библиотека для автоматического обнаружения утечек памяти в Android приложениях. Отслеживает Activity, Fragment, View и другие объекты, показывает stack trace когда объекты не освобождаются. Интегрируется в приложение и показывает уведомления при обнаружении утечек."
+    },
+    {
+      "id": 109,
+      "categoryId": 3,
+      "description": "Что такое R8 и как он работает?",
+      "answer": "R8 - инструмент для обфускации, минификации и оптимизации кода в Android. Заменяет ProGuard и обеспечивает: удаление неиспользуемого кода (tree shaking), переименование классов и методов, оптимизацию байткода. Настраивается через правила в proguard-rules.pro."
+    },
+    {
+      "id": 110,
+      "categoryId": 3,
+      "description": "Что такое Android App Bundle и его преимущества?",
+      "answer": "Android App Bundle (.aab) - новый формат публикации приложений. Преимущества: Google Play генерирует оптимизированные APK для каждого устройства, уменьшает размер приложения, поддерживает dynamic feature delivery, упрощает управление разными конфигурациями."
+    },
+    {
+      "id": 111,
+      "categoryId": 3,
+      "description": "Что такое Dynamic Feature Modules и когда их использовать?",
+      "answer": "Dynamic Feature Modules - модули которые могут быть загружены по требованию. Используются для: уменьшения начального размера приложения, организации кода по features, conditional delivery (разные функции для разных пользователей). Интегрируются с Play Core Library."
+    },
+    {
+      "id": 112,
+      "categoryId": 3,
+      "description": "Что такое Play Core Library и для чего она используется?",
+      "answer": "Play Core Library - библиотека для взаимодействия с Google Play. Обеспечивает: загрузку dynamic feature modules, управление обновлениями in-app, запрос рецензий. Позволяет создавать более гибкие и модульные приложения с отложенной загрузкой компонентов."
+    },
+    {
+      "id": 113,
+      "categoryId": 3,
+      "description": "Что такое In-app Updates API?",
+      "answer": "In-app Updates API - позволяет проверять и устанавливать обновления приложения без выхода в Google Play. Поддерживает два режима: flexible (фоновое обновление), immediate (блокирующее обновление). Улучшает user experience и увеличивает процент обновлений."
+    },
+    {
+      "id": 114,
+      "categoryId": 3,
+      "description": "Что такое In-app Review API?",
+      "answer": "In-app Review API - позволяет запрашивать оценку приложения без перенаправления в Google Play. Показывает стандартный диалог оценки внутри приложения. Увеличивает количество отзывов и улучшает метрики приложения в Google Play."
+    },
+    {
+      "id": 115,
+      "categoryId": 3,
+      "description": "Что такое Billing Library в Android?",
+      "answer": "Billing Library - библиотека для реализации in-app purchases и подписок. Обеспечивает: подключение к Google Play Billing, управление покупками, проверку подлинности транзакций, обработку различных типов продуктов (consumable, non-consumable, subscriptions)."
+    },
+    {
+      "id": 116,
+      "categoryId": 3,
+      "description": "Что такое SafetyNet API и для чего используется?",
+      "answer": "SafetyNet API - набор сервисов для проверки безопасности устройства и приложения. Включает: SafetyNet Attestation (проверка integrity устройства), Safe Browsing (проверка URL), reCAPTCHA. Помогает защитить приложение от взлома и мошенничества."
+    },
+    {
+      "id": 117,
+      "categoryId": 3,
+      "description": "Что такое Biometric Library в Android?",
+      "answer": "Biometric Library - часть AndroidX для стандартизированной биометрической аутентификации. Поддерживает: отпечатки пальцев, распознавание лица, радужную оболочку. Обеспечивает consistent UX across devices и обратную совместимость до Android 6.0."
+    },
+    {
+      "id": 118,
+      "categoryId": 3,
+      "description": "Что такое WorkManager и как он обрабатывает constraints?",
+      "answer": "WorkManager автоматически запускает работу когда выполняются заданные constraints: NetworkType (тип сети), BatteryNotLow (достаточный заряд батареи), RequiresCharging (зарядка), DeviceIdle (устройство не используется). Гарантирует выполнение работы даже после перезагрузки устройства."
+    },
+    {
+      "id": 119,
+      "categoryId": 3,
+      "description": "Что такое Paging 3 и его основные компоненты?",
+      "answer": "Paging 3 - современная версия библиотеки пагинации. Основные компоненты: PagingData (поток данных), PagingSource (источник данных), RemoteMediator (для сетевых и локальных данных), PagingDataAdapter (адаптер для RecyclerView). Полностью поддерживает корутины и Flow."
+    },
+    {
+      "id": 120,
+      "categoryId": 3,
+      "description": "Что такое DataStore Preferences и Proto?",
+      "answer": "DataStore имеет два типа: Preferences DataStore (для key-value пар, аналог SharedPreferences) и Proto DataStore (для typed objects с protobuf). Оба предоставляют асинхронный API, обработку ошибок и миграцию из SharedPreferences."
+    },
+    {
+      "id": 121,
+      "categoryId": 3,
+      "description": "Что такое Hilt и его основные аннотации?",
+      "answer": "Hilt - фреймворк dependency injection для Android. Основные аннотации: @HiltAndroidApp (для Application), @AndroidEntryPoint (для Android компонентов), @Inject (для конструкторов и полей), @Module и @Provides (для предоставления зависимостей), @InstallIn (для определения scope)."
+    },
+    {
+      "id": 122,
+      "categoryId": 3,
+      "description": "Что такое Navigation Component и его преимущества?",
+      "answer": "Navigation Component упрощает навигацию в Android приложениях. Преимущества: визуальный редактор навигации, автоматическая обработка back stack, безопасная передача аргументов, глубокие ссылки, анимации переходов, интеграция с UI компонентами."
+    },
+    {
+      "id": 123,
+      "categoryId": 3,
+      "description": "Что такое Compose Navigation и как он работает?",
+      "answer": "Compose Navigation - библиотека для навигации в Jetpack Compose. Использует NavController и NavHost для управления стеком экранов. Поддерживает: передачу аргументов, глубокие ссылки, вложенную навигацию. Интегрируется с ViewModel и Hilt."
+    },
+    {
+      "id": 124,
+      "categoryId": 3,
+      "description": "Что такое Accompanist и для чего используется?",
+      "answer": "Accompanist - коллекция extension библиотек для Jetpack Compose. Включает: системные UI контроллеры (status bar, navigation bar), pager, insets, animations, permissions. Предоставляет дополнительные возможности пока они не добавлены в официальный Compose."
+    },
+    {
+      "id": 125,
+      "categoryId": 3,
+      "description": "Что такое Coil и его преимущества для загрузки изображений?",
+      "answer": "Coil - современная библиотека для загрузки изображений в Kotlin. Преимущества: полностью написана на Kotlin, поддерживает корутины, автоматическое кэширование, трансформации, поддержка Jetpack Compose. Легковесная и простая в использовании."
+    },
+    {
+      "id": 126,
+      "categoryId": 3,
+      "description": "Что такое Retrofit и как используется в Android?",
+      "answer": "Retrofit - типобезопасный HTTP клиент для Android и Java. Преобразует HTTP API в Kotlin/Java интерфейсы. Поддерживает: различные конвертеры (Gson, Moshi), корутины, адаптеры для RxJava. Широко используется для сетевых запросов в Android приложениях."
+    },
+    {
+      "id": 127,
+      "categoryId": 3,
+      "description": "Что такое OkHttp и его роль в сетевых запросах?",
+      "answer": "OkHttp - эффективный HTTP клиент для Android и Java. Используется Retrofit'ом под капотом. Предоставляет: кэширование, автоматическое сжатие, повторные запросы, interceptors для модификации запросов. Поддерживает HTTP/2 и WebSockets."
+    },
+    {
+      "id": 128,
+      "categoryId": 3,
+      "description": "Что такое Moshi и чем отличается от Gson?",
+      "answer": "Moshi - современная библиотека для JSON парсинга от Square. Отличается от Gson: лучшей производительностью, поддержкой Kotlin (null safety, data classes), отсутствием reflection по умолчанию, лучшей обработкой ошибок. Интегрируется с Retrofit."
+    },
+    {
+      "id": 129,
+      "categoryId": 3,
+      "description": "Что такое Room и как работает с Flow?",
+      "answer": "Room - библиотека для работы с SQLite. Автоматически генерирует код для доступа к базе данных. Поддерживает Flow для реактивных запросов - автоматически emits новые данные при изменении в базе. Интегрируется с корутинами для асинхронных операций."
+    },
+    {
+      "id": 130,
+      "categoryId": 3,
+      "description": "Что такое ViewModel и LiveData в Android?",
+      "answer": "ViewModel - хранит UI-related данные которые переживают изменения конфигурации. LiveData - observable data holder который уведомляет наблюдателей об изменениях. Вместе обеспечивают архитектурный паттерн где ViewModel предоставляет данные через LiveData, а UI наблюдает за изменениями."
+    },
+    {
+      "id": 131,
+      "categoryId": 3,
+      "description": "Что такое StateFlow и SharedFlow в корутинах?",
+      "answer": "StateFlow - hot flow который хранит текущее состояние и уведомляет коллекторов об изменениях. SharedFlow - более общий hot flow для событий. Оба являются альтернативой LiveData и интегрируются с корутинами и Jetpack Compose."
+    },
+    {
+      "id": 132,
+      "categoryId": 3,
+      "description": "Что такое CoroutineScope в Android компонентах?",
+      "answer": "CoroutineScope - область видимости для корутин в Android компонентах. ViewModel имеет viewModelScope, Activity/Fragment - lifecycleScope. Автоматически отменяет корутины при уничтожении компонента, предотвращая утечки памяти."
+    },
+    {
+      "id": 133,
+      "categoryId": 3,
+      "description": "Что такое Dispatchers в корутинах?",
+      "answer": "Dispatchers определяют на каком потоке выполняется корутина. Main - главный поток UI, IO - для операций ввода-вывода, Default - для CPU-intensive задач. withContext() позволяет переключать диспетчер внутри корутины."
+    },
+    {
+      "id": 134,
+      "categoryId": 3,
+      "description": "Что такое Channel в корутинах?",
+      "answer": "Channel - hot stream для коммуникации между корутинами. Поддерживает различные стратегии буферизации: RENDEZVOUS (без буфера), CONFLATED (только последнее значение), BUFFERED (буфер фиксированного размера). Используется для передачи данных между producer и consumer."
+    },
+    {
+      "id": 135,
+      "categoryId": 3,
+      "description": "Что такое SupervisorJob в корутинах?",
+      "answer": "SupervisorJob - особый тип Job где ошибка дочерней корутины не отменяет другие дочерние корутины. Используется когда задачи независимы и failure одной не должен влиять на другие. Создается через SupervisorJob() или supervisorScope {}."
+    },
+    {
+      "id": 136,
+      "categoryId": 3,
+      "description": "Что такое Android Architecture Components?",
+      "answer": "Набор библиотек которые помогают создавать robust, testable, и maintainable приложения. Включают: ViewModel, LiveData, Room, Data Binding, WorkManager, Navigation, Paging. Следуют рекомендациям Android Architecture Guidelines."
+    },
+    {
+      "id": 137,
+      "categoryId": 3,
+      "description": "Что такое MVVM паттерн в Android?",
+      "answer": "Model-View-ViewModel архитектурный паттерн. Model - данные и бизнес-логика, View - UI, ViewModel - посредник между Model и View. ViewModel предоставляет данные через LiveData/StateFlow, View наблюдает за изменениями и обновляет UI. Упрощает тестирование и поддерживает separation of concerns."
+    },
+    {
+      "id": 138,
+      "categoryId": 3,
+      "description": "Что такое MVI паттерн в Android?",
+      "answer": "Model-View-Intent архитектурный паттерн. View emits intents (пользовательские действия), которые обрабатываются и преобразуются в состояние (Model). View отображает состояние. Обеспечает unidirectional data flow, predictability, и easier debugging. Часто реализуется с корутинами и StateFlow."
+    },
+    {
+      "id": 139,
+      "categoryId": 3,
+      "description": "Что такое Clean Architecture в Android?",
+      "answer": "Clean Architecture - подход к организации кода с разделением на слои: Domain (бизнес-логика), Data (источники данных), Presentation (UI). Слои независимы, зависимости направлены внутрь. Использует Use Cases, Repositories, Dependency Injection. Упрощает тестирование и поддержку."
+    },
+    {
+      "id": 140,
+      "categoryId": 3,
+      "description": "Что такое Repository паттерн в Android?",
+      "answer": "Repository - слой абстракции между domain layer и data sources. Предоставляет clean API для доступа к данным, скрывая детали реализации (база данных, сеть, cache). Может комбинировать данные из разных источников и обеспечивать стратегии кэширования."
+    },
+    {
+      "id": 141,
+      "categoryId": 3,
+      "description": "Что такое Use Cases (Interactors) в Clean Architecture?",
+      "answer": "Use Cases - классы которые инкапсулируют конкретные бизнес-правила. Каждый Use Case представляет собой одно бизнес-действие. Получают данные из Repository, выполняют бизнес-логику и возвращают результат. Упрощают тестирование и делают бизнес-логику более явной."
+    },
+    {
+      "id": 142,
+      "categoryId": 3,
+      "description": "Что такое Dependency Injection в Android?",
+      "answer": "Техника где объекты получают свои зависимости извне вместо создания внутри. Уменьшает coupling, упрощает тестирование, способствует modularity. В Android реализуется через Dagger/Hilt, Koin, или ручную injection. Рекомендуется constructor injection."
+    },
+    {
+      "id": 143,
+      "categoryId": 3,
+      "description": "Что такое Modularization в Android?",
+      "answer": "Разделение приложения на отдельные модули (features, core, app). Преимущества: улучшенная производительность сборки, возможность dynamic delivery, better separation of concerns, параллельная разработка. Модули могут быть: dynamic feature modules, library modules."
+    },
+    {
+      "id": 144,
+      "categoryId": 3,
+      "description": "Что такое Android Jetpack Compose?",
+      "answer": "Современный declarative UI toolkit для Android. Вместо XML layouts использует Kotlin функции для описания UI. Преимущества: меньше boilerplate кода, мощные возможности, type safety, упрощенная работа с state. Полностью interoperable с существующим View-based кодом."
+    },
+    {
+      "id": 145,
+      "categoryId": 3,
+      "description": "Что такое Composable функции в Jetpack Compose?",
+      "answer": "Функции Kotlin с аннотацией @Composable которые описывают часть UI. Могут принимать параметры, иметь состояние, и вызывать другие composable функции. Компилятор преобразует их в UI tree. Поддерживают recomposition при изменении state."
+    },
+    {
+      "id": 146,
+      "categoryId": 3,
+      "description": "Что такое State и Recomposition в Compose?",
+      "answer": "State - данные которые могут меняться и вызывать recomposition (перерисовку) UI. Recomposition - процесс когда Compose перерисовывает composable функции при изменении state. Должна быть idempotent и free of side effects. Управляется через mutableStateOf() и remember."
+    },
+    {
+      "id": 147,
+      "categoryId": 3,
+      "description": "Что такое Modifier в Jetpack Compose?",
+      "answer": "Объект для настройки внешнего вида и поведения composable элементов. Цепочка методов определяет: размер, отступы, фон, обработку событий, анимации. Пример: Modifier.padding(16.dp).background(Color.Blue).clickable { }."
+    },
+    {
+      "id": 148,
+      "categoryId": 3,
+      "description": "Что такое Theme в Jetpack Compose?",
+      "answer": "Система для определения цветов, типографики и форм приложения. Использует MaterialTheme для применения Material Design guidelines. Поддерживает светлую и темную тему, кастомизацию через цветовые палитры и типографику."
+    },
+    {
+      "id": 149,
+      "categoryId": 3,
+      "description": "Что такое Navigation в Jetpack Compose?",
+      "answer": "Библиотека для управления навигацией между composable экранами. Использует NavController для управления back stack и NavHost как контейнер. Поддерживает передачу аргументов, глубокие ссылки, вложенную навигацию."
+    },
+    {
+      "id": 150,
+      "categoryId": 3,
+      "description": "Что такое Side Effects в Jetpack Compose?",
+      "answer": "Операции которые должны выполняться в определенные моменты lifecycle composable функции. LaunchedEffect - для запуска корутин, DisposableEffect - для cleanup, SideEffect - для обновления состояния вне Compose. Обеспечивают правильное управление ресурсами и lifecycle."
+    }
+  ]
+}
